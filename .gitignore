@@ -1,7 +1,8 @@
 # compiled output
 /dist
 /node_modules
-/src/keys.js
+/keys.js
+/.env
 
 # Logs
 logs

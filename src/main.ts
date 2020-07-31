@@ -12,7 +12,7 @@ async function bootstrap() {
     .setDescription('The delivery app API description')
     .setVersion('1.0')
     .addTag('delivery')
-    .addBearerAuth('Authorization', 'header', 'apiKey')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('doc', app, document);

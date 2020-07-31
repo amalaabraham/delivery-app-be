@@ -8,18 +8,21 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './auth/entities/User.entity';
 import { UserRepository } from './auth/user.repository';
 @Module({
-  imports: [AuthModule,
+  imports: [
+    AuthModule,
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({
-    type: 'mongodb',
-    url: MONGOURI,
-    entities: [
-      __dirname + '/**/*.entity{.ts,.js}',
-    ],
-    ssl: true,
-    useUnifiedTopology: true,
-    useNewUrlParser: true
-  }), AuthModule,],
+      type: 'mongodb',
+      url: MONGOURI,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      ssl: true,
+      synchronize: true,
+      logging: true,
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    }),
+    AuthModule,
+  ],
   controllers: [AuthController],
   providers: [],
 })

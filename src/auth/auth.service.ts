@@ -1,35 +1,30 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
-import {JwtService} from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { MongoRepository } from 'typeorm';
 import { User } from './entities/User.entity';
+import { access } from 'fs';
 
 @Injectable()
 export class AuthService {
   private logger = new Logger('Auth Service');
 
   constructor(
-      @InjectRepository(UserRepository)
-     // private readonly userRepository: MongoRepository<User>,
-      private readonly userRepository: UserRepository,
-      private readonly jwtService: JwtService
-    
-    
-      //private readonly mailerService: MailerService
-  ) {
-  }
+    @InjectRepository(UserRepository)
+    private readonly userRepository: UserRepository, // private readonly userRepository: MongoRepository<User>,
+    private readonly jwtService: JwtService, //private readonly mailerService: MailerService
+  ) {}
 
   async getUser(req: any): Promise<any> {
-    const {id} = req.user;
-    console.log(id);
-    const user = await this.userRepository.findOne({id});
+    const { email } = req.user;
+    const user = await this.userRepository.findOne({ email });
     console.log(user);
 
     //this.logger.verbose(`User Logged In ${user.name}`);
     if (user) {
-      const {...result} = user;
+      const { ...result } = user;
       delete result.password;
       delete result.id;
       return {
@@ -47,7 +42,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     try {
-      const user = await this.userRepository.findOne({email});
+      const user = await this.userRepository.findOne({ email });
       console.log('user', user);
       if (user) {
         const match = await bcrypt.compare(password, user.password);
@@ -65,7 +60,6 @@ export class AuthService {
     }
   }
 
-
   async register(data: any): Promise<any> {
     try {
       if (data.password !== data.confirm) {
@@ -77,20 +71,28 @@ export class AuthService {
           },
         };
       }
-      const user = await this.userRepository.findOne({email: data.email});
+      const user = await this.userRepository.findOne({ email: data.email });
       if (!user) {
         data.password = await bcrypt.hash(data.password, 10);
         data.status = 'ACTIVE';
 
         const registerUser = await this.userRepository.save(data);
-        console.log(registerUser)
-        const {...result} = registerUser;
+        console.log(registerUser);
+
+        //get the currenty saved user to generate his access token
+        const savedUser = await this.userRepository.findOne({
+          email: data.email,
+        });
+        const { email, id } = savedUser;
+        const payload = { email, id };
+
+        const { ...result } = registerUser;
         delete result.password;
         delete result.confirm;
         return {
           success: true,
           message: 'Success',
-          data: result,
+          data: { result, access_token: this.jwtService.sign(payload) },
         };
       }
       return {
@@ -110,14 +112,12 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const {email, id} = user;
-    const payload = {email, id};
+    const { email, id } = user;
+    const payload = { email, id };
     return {
       success: true,
       // eslint-disable-next-line @typescript-eslint/camelcase
-      access_token: this.jwtService.sign(payload)
-    }
+      access_token: this.jwtService.sign(payload),
+    };
   }
-
-
 }

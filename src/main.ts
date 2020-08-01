@@ -6,6 +6,11 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const logger = new Logger('Food Delivery System');
   const app = await NestFactory.create(AppModule);
+  if (process.env.NODE_ENV === 'development') {
+    app.enableCors();
+  } else {
+    app.enableCors({ origin: '*' });
+  }
 
   const options = new DocumentBuilder()
     .setTitle('Delivery app')

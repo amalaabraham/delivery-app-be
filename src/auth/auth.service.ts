@@ -75,6 +75,7 @@ export class AuthService {
       if (!user) {
         data.password = await bcrypt.hash(data.password, 10);
         data.status = 'ACTIVE';
+        delete data.confirm;
 
         const registerUser = await this.userRepository.save(data);
         console.log(registerUser);

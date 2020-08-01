@@ -34,10 +34,12 @@ export class RegisterDto {
   @ApiProperty({ example: null })
   @IsString()
   type: string;
-
+  
+  @ApiProperty({ example: null })
   @IsNumber()
   number: number;
 
+  @ApiProperty({ example: null })
   @IsNumber()
   location: number;
 }

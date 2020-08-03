@@ -6,6 +6,7 @@ import { User } from './entities/User.entity';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/Login.dto';
+import { RestaurantregisterDto } from './dto/Restaurantregister.dto'
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -37,6 +38,11 @@ export class AuthController {
     @Post('register')
     register(@Body() registerDto: RegisterDto):Promise<any>{
       return this.authService.register(registerDto);
+    }
+
+    @Post('restaurantregister')
+    restaurantregister(@Body() restaurantregisterDto: RestaurantregisterDto):Promise<any>{
+      return this.authService.register(restaurantregisterDto);
     }
 
 }

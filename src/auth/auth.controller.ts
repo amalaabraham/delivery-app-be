@@ -45,4 +45,9 @@ export class AuthController {
       return this.authService.register(restaurantregisterDto);
     }
 
+    @Get('allrestaurants')
+    getAllRestaurants(@Request() req: any) {
+      return this.authService.getAllRestaurants(req);
+    }
+
 }

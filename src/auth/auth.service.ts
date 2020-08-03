@@ -1,6 +1,7 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
+import { RestaurantRepository } from './restaurant.repository'
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { MongoRepository } from 'typeorm';
@@ -13,9 +14,11 @@ export class AuthService {
 
   constructor(
     @InjectRepository(UserRepository)
+    private readonly restaurantRepository: RestaurantRepository,
     private readonly userRepository: UserRepository, // private readonly userRepository: MongoRepository<User>,
     private readonly jwtService: JwtService, //private readonly mailerService: MailerService
   ) {}
+  
 
   async getUser(req: any): Promise<any> {
     const { email } = req.user;
@@ -121,4 +124,8 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async getAllRestaurants(req: any): Promise<any> {
+    return await this.restaurantRepository.find();
+}
 }

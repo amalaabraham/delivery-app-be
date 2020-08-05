@@ -7,9 +7,12 @@ import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { User } from './auth/entities/User.entity';
 import { UserRepository } from './auth/user.repository';
+import { RestaurantModule } from './restaurant/restaurant.module';
+import { RestaurantController } from './restaurant/restaurant.controller';
 @Module({
   imports: [
     AuthModule,
+    RestaurantModule,
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({
       type: 'mongodb',
@@ -22,8 +25,9 @@ import { UserRepository } from './auth/user.repository';
       useNewUrlParser: true,
     }),
     AuthModule,
+    RestaurantModule,
   ],
-  controllers: [AuthController],
+  controllers: [AuthController,RestaurantController],
   providers: [],
 })
 export class AppModule {}

@@ -28,7 +28,7 @@ export class RestaurantController {
     }
 
     @Get(":hotelId")
-    getRestaurantById(@Req() req:any,@Param('id',ParseIntPipe)id:string) {
+    getRestaurantById(@Req() req:any,@Param('id')id:string) {
         this.logger.verbose("restaurant retrieved");
         return this.restaurantService.getRestaurantById(req.user,id);
     }
@@ -48,7 +48,7 @@ export class RestaurantController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     @Delete('/:id')
-    deleteRestaurant(@Req() req:any,@Param('id',ParseIntPipe)id:string) {
+    deleteRestaurant(@Req() req:any,@Param('id')id:string) {
         this.logger.verbose("restaurant removed");
         return this.restaurantService.deleteRestaurant(req.user,id);
     }
@@ -58,7 +58,7 @@ export class RestaurantController {
     @Patch('/:id/update-Restaurant')
     updateRestaurant(
         @Req() req:any,
-        @Param('id',ParseIntPipe) id:string,
+        @Param('id') id:string,
         @Body() updateRestaurantDto: UpdateRestaurantDto,
          )
         {

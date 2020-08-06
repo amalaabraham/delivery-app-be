@@ -4,6 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from 'src/auth/user.repository';
 import { User } from 'src/auth/entities/User.entity';
 import { ObjectID } from "typeorm";
+import { IsMongoId } from 'class-validator';
+const ObjectId = require('mongodb').ObjectID;
 
 @Injectable()
 export class RestaurantService {
@@ -22,7 +24,7 @@ export class RestaurantService {
 
 async validateUser(user:User): Promise<any> {
     console.log(user.id)
-    const found = await this.userRepository.findOne({id:user.id,});
+    const found = await this.userRepository.findOne(ObjectId(user.id));
     console.log(found);
     //console.log(found.type,found.email)
     if(found.type === 'owner'){
@@ -61,8 +63,7 @@ else{
 }
 
 async getRestaurantById(user:User,id):Promise<any>{
-        
-    const restaurant = await this.restaurantRepository.findOne({id});
+    const restaurant = await this.restaurantRepository.findOne(ObjectId(id));
     if(restaurant)
     {
         return restaurant;
@@ -78,7 +79,7 @@ async addrestaurant(data:any,user:User): Promise<any> {
         console.log(user);
         console.log(data);
         console.log(user.id);
-            if(await this.validateUser(user))
+           if(await this.validateUser(user))
             {
                 console.log(user.id);
                 data.ownerID=user.id;
@@ -96,19 +97,30 @@ async addrestaurant(data:any,user:User): Promise<any> {
 }
 
 async findHotel(user:User,id:ObjectID): Promise<any>{
-    const found =await this.userRepository.findOne({id:user.id})
-    const hotel = await this.restaurantRepository.findOne({id:id})
-    if((found.type === 'owner' && hotel.ownerID === found.id)){
+    const found =await this.userRepository.findOne(ObjectId(user.id))
+    const hotel = await this.restaurantRepository.findOne(ObjectId(id))
+    console.log(found)
+    console.log(hotel)
+    console.log(hotel.ownerID)
+    console.log(found.id)
+    console.log(found.type)
+    if(found.type === 'owner' && ObjectId(hotel.ownerID) .equals(found.id)){
+       
+        console.log(found)
         return found
     }
+
     else {
         throw new UnauthorizedException;
     }
 }
 
 async deleteRestaurant(user:User,id):Promise<any> {
+    console.log(id)
+    console.log(user)
     if(await this.findHotel(user,id)){
-    const restaurant = await this.restaurantRepository.findOne({ id:id })
+    const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
+    console.log(restaurant)
     if(restaurant){
         restaurant.status = "NOT_AVAILABLE"
     await this.restaurantRepository.save(restaurant);
@@ -131,7 +143,7 @@ async deleteRestaurant(user:User,id):Promise<any> {
 async updateRestaurant(user:User,id,data:any): Promise <any> {
 
     if(await this.findHotel(user,id)){
-    const restaurant = await this.restaurantRepository.findOne({id:id })
+    const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
     if(restaurant){
         if(data.name) {
             restaurant.name=data.name

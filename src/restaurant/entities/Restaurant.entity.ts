@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ObjectIdColum
 @Entity('restaurant')
 export class Restaurant {
 
-  @PrimaryGeneratedColumn() 
+ @ObjectIdColumn() 
   id: ObjectID;
 
   @Column()

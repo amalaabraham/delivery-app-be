@@ -28,9 +28,9 @@ export class RestaurantController {
     }
 
     @Get(":hotelId")
-    getRestaurantById(@Req() req:any,@Param ('hotelId',ParseIntPipe) hotelId :ObjectID) {
+    getRestaurantById(@Req() req:any,@Param('id',ParseIntPipe)id:string) {
         this.logger.verbose("restaurant retrieved");
-        return this.restaurantService.getRestaurantById(req.user,hotelId);
+        return this.restaurantService.getRestaurantById(req.user,id);
     }
 
     @ApiBearerAuth()
@@ -48,7 +48,7 @@ export class RestaurantController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     @Delete('/:id')
-    deleteRestaurant(@Req() req:any,@Param('id',ParseIntPipe)id:ObjectID) {
+    deleteRestaurant(@Req() req:any,@Param('id',ParseIntPipe)id:string) {
         this.logger.verbose("restaurant removed");
         return this.restaurantService.deleteRestaurant(req.user,id);
     }
@@ -58,12 +58,12 @@ export class RestaurantController {
     @Patch('/:id/update-Restaurant')
     updateRestaurant(
         @Req() req:any,
-        @Param('id',ParseIntPipe) id:ObjectID,
-        @Body() updateFacilityDto: UpdateRestaurantDto,
+        @Param('id',ParseIntPipe) id:string,
+        @Body() updateRestaurantDto: UpdateRestaurantDto,
          )
         {
             this.logger.verbose("restaurant updated");
-            return this.restaurantService.updateRestaurant(req.user,id, UpdateRestaurantDto);
+            return this.restaurantService.updateRestaurant(req.user,id, updateRestaurantDto);
         }
 
 

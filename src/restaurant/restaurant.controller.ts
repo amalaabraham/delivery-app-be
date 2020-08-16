@@ -1,12 +1,12 @@
 import { Controller, Logger, Get, UseGuards, Req, Param, ParseIntPipe, Post, UseInterceptors, Body, UploadedFile, Delete, Patch } from '@nestjs/common';
-import {ApiBearerAuth} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import { RestaurantService } from './restaurant.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ObjectID } from 'mongodb';
 import { RestaurantregisterDto } from './dto/addrestaurantdto.dto';
 import { UpdateRestaurantDto } from './dto/updatedto.dto';
 
-
+@ApiTags('Restaurant Management')
 @Controller('api/v1/restaurant')
 export class RestaurantController {
     private logger = new Logger('Restaurant Controller');

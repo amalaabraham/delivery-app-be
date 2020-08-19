@@ -17,10 +17,7 @@ export class RestaurantregisterDto {
   @ApiProperty({ example: null })
   @IsNumber()
   contact: number;
-  
-  @ApiProperty({ example:null })
-  @IsOptional()
-  menulist:any;
+
 
   @ApiProperty({ example:null })
   @IsOptional()

@@ -63,6 +63,7 @@ else{
 }
 
 async getRestaurantById(user:User,id):Promise<any>{
+    console.log(id)
     const restaurant = await this.restaurantRepository.findOne(ObjectId(id));
     if(restaurant)
     {
@@ -97,6 +98,7 @@ async addrestaurant(data:any,user:User): Promise<any> {
 }
 
 async findHotel(user:User,id:ObjectID): Promise<any>{
+    console.log("hello")
     const found =await this.userRepository.findOne(ObjectId(user.id))
     const hotel = await this.restaurantRepository.findOne(ObjectId(id))
     console.log(found)
@@ -160,9 +162,7 @@ async updateRestaurant(user:User,id,data:any): Promise <any> {
         if(data.status){
             restaurant.status=data.status
         }
-        if(data.menulist){
-            restaurant.menulist=data.menulist
-        }
+
         if(data.photos){
             restaurant.photos=data.photos
         }

@@ -1,10 +1,10 @@
-import { Entity, ObjectIdColumn, Column } from "typeorm";
-import { ObjectId } from "mongodb";
+import { Entity, ObjectIdColumn, Column,ObjectID } from "typeorm";
+//import { ObjectId } from "mongodb";
 
 @Entity('menu')
 export class Menu{
     @ObjectIdColumn()
-    id:ObjectId;
+    id: ObjectID;
 
     @Column()
     restaurantId:any;
@@ -14,5 +14,9 @@ export class Menu{
 
     @Column()
     dishes:any;
+
+    constructor(menu?: Partial<Menu>) {
+        Object.assign(this, menu);
+      }
 
 }

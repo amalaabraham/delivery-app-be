@@ -6,6 +6,7 @@ import { RestaurantRepository } from 'src/restaurant/restaurant.repository';
 import { AddMenuDto, AddDishes } from './dto';
 import { RestaurantService } from 'src/restaurant/restaurant.service';
 import { User } from 'src/auth/entities/User.entity';
+const ObjectId = require('mongodb').ObjectID;
 
 @Injectable()
 export class MenuService {
@@ -13,19 +14,22 @@ export class MenuService {
         @InjectRepository(MenuRepository)
         @InjectRepository(UserRepository)
         @InjectRepository(RestaurantRepository)
-        private readonly restaurantRepository:RestaurantRepository,
-        private readonly userRepository:UserRepository,
         private readonly menuRepository:MenuRepository,
+        private readonly userRepository:UserRepository,
+        private readonly restaurantRepository:RestaurantRepository,
+        
         private readonly restaurantService:RestaurantService,
     )
     {}
 
-    async getMenuById(id:any):Promise<any>{
-        const restaurant = await this.restaurantRepository.findOne({id:id})
+    async getMenuById(id):Promise<any>{
+        const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
+        console.log(restaurant)
         if(restaurant)
         {
             const menuList = await this.menuRepository.find({restaurantId:id})
-            if(menuList)
+            console.log(menuList)
+            if(menuList.length > 0)
             {
                 return {
                     success:true,
@@ -45,8 +49,11 @@ export class MenuService {
     }
 
 
-    async AddMenu(user:any,id:any,menu:AddMenuDto):Promise<any>{
+    async AddMenu(id,menu:AddMenuDto,user:User):Promise<any>{
         try{
+            console.log("hi")
+            console.log(user)
+            console.log(id)
             if(await this.restaurantService.findHotel(user,id))
             {
                 return this.menuRepository.addMenu(id,menu);
@@ -59,15 +66,15 @@ export class MenuService {
         }
     }
     
-    async getDishesByMenu(id:any):Promise<any>{
+    async getDishesByMenu(id):Promise<any>{
         try{
-            const menu = await this.menuRepository.findOne({id:id})
+            const menu = await this.menuRepository.findOne(ObjectId(id))
             if(menu)
             {
                 return {
                     success:true,
-                    message:'Menu Retrieved',
-                    data:menu
+                    message:'Dishes Retrieved',
+                    data:menu.dishes
                 }
             }
             else{
@@ -80,14 +87,15 @@ export class MenuService {
         }
     }
 
-    async getDishesByRestaurant(id:any):Promise<any>{
+    async getDishesByRestaurant(id):Promise<any>{
         const menu = await this.menuRepository.find({restaurantId:id})
-        var result;
+        var result = [];
+        
         if(menu.length>0)
         {
             for(var i=0;i<menu.length;i++)
             {
-                result.append(menu[i].dishes);
+                result.push(menu[i]);
             }
             return {
                 success:true,

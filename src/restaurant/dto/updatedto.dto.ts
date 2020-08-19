@@ -17,10 +17,6 @@ export class UpdateRestaurantDto {
   @ApiProperty({ example: null })
   @IsNumber()
   contact: number;
-  
-  @ApiProperty({ example:null })
-  @IsOptional()
-  menulist:any;
 
   @ApiProperty({ example:null })
   @IsOptional()

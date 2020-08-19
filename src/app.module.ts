@@ -15,6 +15,7 @@ import { MenuController } from './menu/menu.controller';
   imports: [
     AuthModule,
     RestaurantModule,
+    MenuModule,
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({
       type: 'mongodb',

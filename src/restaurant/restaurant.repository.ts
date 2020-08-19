@@ -8,12 +8,11 @@ export class RestaurantRepository extends MongoRepository<Restaurant> {
     
     async createRestaurant(restaurantregisterDto: any,id):Promise<any>{
 
-        const {name,address,contact,menulist,photos,location}=restaurantregisterDto;
+        const {name,address,contact,photos,location}=restaurantregisterDto;
         const restaurant = new Restaurant();
         restaurant.name = name;
         restaurant.address = address;                           
-        restaurant.contact = contact;
-        restaurant.menulist = menulist;                
+        restaurant.contact = contact;               
         restaurant.ownerID = id;        
         restaurant.photos = photos;   
         restaurant.status= 'ACTIVE';

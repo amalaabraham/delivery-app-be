@@ -5,6 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ObjectID } from 'mongodb';
 import { RestaurantregisterDto } from './dto/addrestaurantdto.dto';
 import { UpdateRestaurantDto } from './dto/updatedto.dto';
+import { Prop } from '@nestjs/mongoose';
 
 @ApiTags('Restaurant Management')
 @Controller('api/v1/restaurant')
@@ -28,9 +29,9 @@ export class RestaurantController {
     }
 
     @Get(":hotelId")
-    getRestaurantById(@Req() req:any,@Param('id')id:string) {
+    getRestaurantById(@Req() req:any,@Param('hotelId')_id:string) {
         this.logger.verbose("restaurant retrieved");
-        return this.restaurantService.getRestaurantById(req.user,id);
+        return this.restaurantService.getRestaurantById(req.user,_id);
     }
 
     @ApiBearerAuth()
@@ -41,6 +42,7 @@ export class RestaurantController {
     @Req() req:any,
      )
     {
+        
         this.logger.verbose("restaurant created");
         return this.restaurantService.addrestaurant(restaurantregisterDto,req.user);
     }

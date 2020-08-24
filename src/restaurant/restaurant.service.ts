@@ -23,12 +23,12 @@ export class RestaurantService {
 }
 
 async validateUser(user:User): Promise<any> {
-    console.log(user.id)
+   // console.log(user.id)
     const found = await this.userRepository.findOne(ObjectId(user.id));
-    console.log(found);
+   // console.log(found);
     //console.log(found.type,found.email)
     if(found.type === 'owner'){
-        console.log(found);
+      //  console.log(found);
         return found;
     }
     else {
@@ -41,13 +41,18 @@ async getRestaurant(user:User): Promise<any> {
    
     if(await this.validateUser(user)){
     
-    const restaurant = await this.restaurantRepository.find({ ownerID:user.id })
-    if(restaurant) {
-        const {...result}=restaurant;
+    const restaurant = await this.restaurantRepository.find({ ownerID:user.id}  )
+    var results = [];
+    if(restaurant ) {
+        for(var i=0;i<restaurant.length;i++)
+        {
+            if(restaurant[i].status === "ACTIVE")
+             {results.push(restaurant[i]); }
+        }
         return{
             success:true,
             message:"restaurants retrieved",
-            data:result
+            data:results
         };
     }
     else {
@@ -63,9 +68,9 @@ else{
 }
 
 async getRestaurantById(user:User,id):Promise<any>{
-    console.log(id)
+
     const restaurant = await this.restaurantRepository.findOne(ObjectId(id));
-    if(restaurant)
+    if(restaurant.status==="ACTIVE")
     {
         return restaurant;
     }
@@ -77,12 +82,12 @@ async getRestaurantById(user:User,id):Promise<any>{
 
 async addrestaurant(data:any,user:User): Promise<any> {
     try{
-        console.log(user);
-        console.log(data);
-        console.log(user.id);
+       // console.log(user);
+      //  console.log(data);
+      //  console.log(user.id);
            if(await this.validateUser(user))
             {
-                console.log(user.id);
+               // console.log(user.id);
                 data.ownerID=user.id;
                 return this.restaurantRepository.createRestaurant(data,user.id);
             }
@@ -98,17 +103,13 @@ async addrestaurant(data:any,user:User): Promise<any> {
 }
 
 async findHotel(user:User,id:ObjectID): Promise<any>{
-    console.log("hello")
     const found =await this.userRepository.findOne(ObjectId(user.id))
     const hotel = await this.restaurantRepository.findOne(ObjectId(id))
-    console.log(found)
-    console.log(hotel)
-    console.log(hotel.ownerID)
-    console.log(found.id)
-    console.log(found.type)
+   // console.log(found)
+  //  console.log(hotel)
     if(found.type === 'owner' && ObjectId(hotel.ownerID) .equals(found.id)){
        
-        console.log(found)
+      //  console.log(found)
         return found
     }
 
@@ -118,11 +119,8 @@ async findHotel(user:User,id:ObjectID): Promise<any>{
 }
 
 async deleteRestaurant(user:User,id):Promise<any> {
-    console.log(id)
-    console.log(user)
     if(await this.findHotel(user,id)){
     const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
-    console.log(restaurant)
     if(restaurant){
         restaurant.status = "NOT_AVAILABLE"
     await this.restaurantRepository.save(restaurant);

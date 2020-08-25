@@ -4,18 +4,27 @@ import {
   IsString,
   IsNumber,
 } from 'class-validator';
-import { ObjectID } from 'mongodb';
 
 
-export class AddDishes {
-  
+export class UpdateDish {
+
+    @ApiProperty({example:null})
+    resId:string;
+
+    @ApiProperty({example:null})
+    menuId:string;
+
+    @ApiProperty({example:null})
+    dishId:string;
 
   @ApiProperty({ example: null })
   @IsString()
+  @IsOptional()
   name: string;
 
   @ApiProperty({ example: null })
   @IsNumber()
+  @IsOptional()
   price: number;
 
   @ApiProperty({ example:null })

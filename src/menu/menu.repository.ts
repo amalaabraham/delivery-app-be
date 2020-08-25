@@ -1,7 +1,8 @@
 import { EntityRepository, MongoRepository } from "typeorm";
 import { Menu } from "./entities/Menu.entity";
 import { AddDishes, AddMenuDto } from "./dto";
-
+import {v1 as uuidv1} from 'uuid';
+import { ObjectID } from "mongodb";
 
 @EntityRepository(Menu)
 export class MenuRepository extends MongoRepository<Menu>{
@@ -11,6 +12,10 @@ export class MenuRepository extends MongoRepository<Menu>{
         
         const menu = new Menu();
         menu.name=name;
+        for (var i=0;i<dish.length;i++)
+        {
+            dish[i]['dishId']= new ObjectID();
+        }
         menu.dishes=dish;
         menu.restaurantId=id;
         await this.save(menu)

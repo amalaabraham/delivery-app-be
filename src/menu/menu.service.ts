@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MenuRepository } from './menu.repository';
 import { UserRepository } from 'src/auth/user.repository';
 import { RestaurantRepository } from 'src/restaurant/restaurant.repository';
-import { AddMenuDto, AddDishes } from './dto';
+import { AddMenuDto, AddDishes, UpdateDish } from './dto';
 import { RestaurantService } from 'src/restaurant/restaurant.service';
 import { User } from 'src/auth/entities/User.entity';
 const ObjectId = require('mongodb').ObjectID;
@@ -106,5 +106,44 @@ export class MenuService {
         else{
             throw new NotFoundException({message:'Dishes not Found'})
         }
+    }
+    async UpdateDish(dish:UpdateDish,user:User):Promise<any>{
+        try{
+            console.log("hi")
+            console.log(user)
+            if(await this.restaurantService.findHotel(user,ObjectId(dish.resId)))
+            {
+                const menu = await this.menuRepository.findOne(ObjectId(dish.menuId));
+                //console.log(menu);
+                if(menu)
+                {
+                    for (var i =0;i<menu.dishes.length;i++)
+                    {
+                        
+                        if(menu.dishes[i].dishId==dish.dishId)
+                        {
+                            console.log("here");
+                            break;
+                        }
+                    }
+                    if(dish.name)
+                    {
+                        menu.dishes[i].name=dish.name;
+                    }
+                    if(dish.price)
+                    {
+                        menu.dishes[i].price=dish.price;
+                    }
+                    if(dish.photos)
+                    {
+                        menu.dishes[i].photo=dish.photos;
+                    }
+                    await this.menuRepository.save(menu);
+                }
+            }
+
+
+    }
+    catch{}
     }
 }

@@ -13,7 +13,7 @@ export class updateUserdto {
 
   @ApiProperty({ example: null })
   @IsString()
-  email: string;
+  name: string;
 
   @ApiProperty({ required: false, example: null })
   @ApiProperty({ example: null })

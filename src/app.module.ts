@@ -12,11 +12,13 @@ import { RestaurantController } from './restaurant/restaurant.controller';
 import { MenuModule } from './menu/menu.module';
 import { MenuController } from './menu/menu.controller';
 import { BookingModule } from './booking/booking.module';
+import { BookingController } from './booking/booking.controller';
 @Module({
   imports: [
     AuthModule,
     RestaurantModule,
     MenuModule,
+    BookingModule,
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({
       type: 'mongodb',
@@ -33,7 +35,7 @@ import { BookingModule } from './booking/booking.module';
     MenuModule,
     BookingModule,
   ],
-  controllers: [AuthController,RestaurantController,MenuController],
+  controllers: [AuthController,RestaurantController,MenuController,BookingController],
   providers: [],
 })
 export class AppModule {}

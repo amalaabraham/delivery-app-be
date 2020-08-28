@@ -8,6 +8,7 @@ const ObjectId = require('mongodb').ObjectID;
 @EntityRepository(Booking)
 export class BookingRepository extends MongoRepository<Booking>{
     async createBooking(user: User, data: CreateBookingDto,repo:MenuRepository):Promise<any> {
+        console.log(user)
         const {dishIds,restaurantId,deliveryAdd,deliveryDate}=data;
         const booking = new Booking()
         booking.restaurantId=restaurantId

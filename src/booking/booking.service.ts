@@ -50,9 +50,11 @@ export class BookingService {
         }
 
     async createBooking(user:User,data:CreateBookingDto):Promise<any>{
-        if(user.type=="customer")
+        const users = await this.userRepository.findOne(ObjectId(user.id))
+        console.log(users)
+        if(users.type=="customer")
         {
-            await this.bookingRepository.createBooking(user,data,this.menuRepository);
+            await this.bookingRepository.createBooking(users,data,this.menuRepository);
         }
         else
         {

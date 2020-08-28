@@ -23,10 +23,11 @@ export class BookingController {
 
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
-    @Post("Create Booking")
+    @Post("CreateBooking")
     createBooking(@Req() req,@Body() bookingDto:CreateBookingDto)
     {
-        this.logger.verbose("Create Booking");
+        this.logger.verbose("CreateBooking");
+        console.log(req.user)
         return this.bookingService.createBooking(req.user,bookingDto);
     }
 

@@ -7,16 +7,18 @@ import { BookingRepository } from './booking.repository';
 import { RestaurantRepository } from 'src/restaurant/restaurant.repository';
 import { UserRepository } from 'src/auth/user.repository';
 import { RestaurantModule } from 'src/restaurant/restaurant.module';
+import { MenuRepository } from 'src/menu/menu.repository';
 
 @Module({
   imports:[
     TypeOrmModule.forFeature([Booking,BookingRepository]),
     TypeOrmModule.forFeature([RestaurantRepository]),
     TypeOrmModule.forFeature([UserRepository]),
+    TypeOrmModule.forFeature([MenuRepository]),
     RestaurantModule
   ],
-  controllers: [BookingController],
   providers: [BookingService],
+  controllers: [BookingController],
   exports: [BookingService],
 })
 export class BookingModule {}

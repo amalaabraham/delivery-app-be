@@ -2,10 +2,9 @@ import { Entity, Unique, PrimaryGeneratedColumn, Column, CreateDateColumn, Objec
 
 
 @Entity('booking')
-@Unique(['bookid'])
 export class Booking {
 
-  @PrimaryGeneratedColumn() 
+  @ObjectIdColumn() 
   bookId: ObjectID;
 
   @Column() 

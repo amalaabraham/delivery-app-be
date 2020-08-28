@@ -11,6 +11,7 @@ import { RestaurantModule } from './restaurant/restaurant.module';
 import { RestaurantController } from './restaurant/restaurant.controller';
 import { MenuModule } from './menu/menu.module';
 import { MenuController } from './menu/menu.controller';
+import { BookingModule } from './booking/booking.module';
 @Module({
   imports: [
     AuthModule,
@@ -30,6 +31,7 @@ import { MenuController } from './menu/menu.controller';
     AuthModule,
     RestaurantModule,
     MenuModule,
+    BookingModule,
   ],
   controllers: [AuthController,RestaurantController,MenuController],
   providers: [],

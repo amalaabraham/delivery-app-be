@@ -116,7 +116,7 @@ export class MenuService {
             menu.dishes[i].price = dish.price;
           }
           if (dish.photos) {
-            menu.dishes[i].photo = dish.photos;
+            menu.dishes[i].photos = dish.photos;
           }
           await this.menuRepository.save(menu);
         }

@@ -3,6 +3,8 @@ import { Menu } from "./entities/Menu.entity";
 import { AddDishes, AddMenuDto } from "./dto";
 import {v1 as uuidv1} from 'uuid';
 import { ObjectID } from "mongodb";
+import { AddMoreDish } from "./dto/addmoredishesdto.dto";
+
 
 @EntityRepository(Menu)
 export class MenuRepository extends MongoRepository<Menu>{
@@ -25,4 +27,20 @@ export class MenuRepository extends MongoRepository<Menu>{
 
 
     }
+    async addDish(adddish: AddMoreDish,id,menu:Menu):Promise<any>
+    {
+        const {menuId,resId,dish}=adddish;
+        
+        for (var i=0;i<dish.length;i++)
+        {
+            dish[i]['dishId']= new ObjectID();
+            menu.dishes.push(dish[i]);
+        }
+        
+        await this.save(menu)
+        console.log(menu);
+        return menu;
+
+    }
+
 }

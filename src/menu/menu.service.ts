@@ -132,21 +132,22 @@ export class MenuService {
     } catch {}
   }
 
-  async AddMoreDish(dish: AddMoreDish, user: User): Promise<any> {
+  async AddMoreDish(adddish: AddMoreDish, user: User): Promise<any> {
     try {
-      if (await this.restaurantService.findHotel(user, ObjectId(dish.resId))) {
-        const menu = await this.menuRepository.findOne(ObjectId(dish.menuId));
-        //console.log(menu);
-        if (menu) {
-          dish['dishId'] = new ObjectID();
-          delete dish.menuId;
-          delete dish.resId;
-          menu.dishes.push(dish);
-          await this.menuRepository.save(menu);
+      if (await this.restaurantService.findHotel(user, ObjectId(adddish.resId))) {
+        const menu = await this.menuRepository.findOne(ObjectId(adddish.menuId));
+        if (menu){
+            return this.menuRepository.addDish(adddish, user,menu);
         }
+    }
+ }   catch (e) {
+        throw new HttpException({ message: e }, HttpStatus.BAD_REQUEST);
       }
-    } catch {}
-  }
+          
+        }
+      
+    
+
 
   async deleteMenu(user: User, id): Promise<any> {
     const menu = await this.menuRepository.findOne(ObjectId(id));

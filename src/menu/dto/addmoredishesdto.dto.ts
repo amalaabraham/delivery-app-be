@@ -4,6 +4,7 @@ import {
     IsString,
     IsNumber,
   } from 'class-validator';
+import { AddDishes } from "./AddDishes.dto";
 
 export class AddMoreDish {
 
@@ -13,16 +14,6 @@ export class AddMoreDish {
     @ApiProperty({example:null})
     resId:string;
 
-
-    @ApiProperty({ example: null })
-  @IsString()
-  name: string;
-
-  @ApiProperty({ example: null })
-  @IsNumber()
-  price: number;
-
-  @ApiProperty({ example:null })
-  @IsOptional()
-  photos:any;
+    @ApiProperty({ type:AddDishes,isArray: true})
+    dish: AddDishes[]; 
 }

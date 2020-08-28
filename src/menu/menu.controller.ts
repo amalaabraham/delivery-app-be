@@ -1,9 +1,10 @@
-import { Controller, Logger, Get, Param, ParseIntPipe, Post, Body, Req, Put, UseGuards, Delete } from '@nestjs/common';
+import { Controller, Logger, Get, Param, ParseIntPipe, Post, Body, Req, Put, UseGuards, Delete, Patch } from '@nestjs/common';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import { MenuService } from './menu.service';
-import { AddMenuDto, UpdateDish } from './dto';
+import { AddMenuDto, UpdateDish, AddDishes } from './dto';
 import { AuthGuard } from '@nestjs/passport';
 import { DeleteDish } from './dto/deletedishdto.dto';
+import { AddMoreDish } from './dto/addmoredishesdto.dto';
 
 @ApiTags('Menu Management')
 @Controller('api/v1/menu')
@@ -68,6 +69,16 @@ export class MenuController {
         this.logger.verbose("menu removed");
         return this.menuService.deleteMenu(req.user,id);
     }
+
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @Patch('/addmoredish')
+    addmoreDish(@Body() addmoreDish:AddMoreDish,@Req() req:any)
+    {
+        this.logger.verbose('adding dish')
+        return this.menuService.AddMoreDish(addmoreDish,req.user);
+    }
+
 
    
     

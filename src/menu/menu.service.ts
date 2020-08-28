@@ -8,8 +8,10 @@ import { RestaurantService } from 'src/restaurant/restaurant.service';
 import { User } from 'src/auth/entities/User.entity';
 import { Menu } from './entities/Menu.entity';
 import { DeleteDish } from './dto/deletedishdto.dto';
+import { AddMoreDish } from './dto/addmoredishesdto.dto';
 //import { deleteDish } from './dto/deletedishdto.dto';
 const ObjectId = require('mongodb').ObjectID;
+import { ObjectID } from "mongodb";
 
 @Injectable()
 export class MenuService {
@@ -150,6 +152,32 @@ export class MenuService {
     catch{}
     }
 
+    async AddMoreDish(dish:AddMoreDish,user:User):Promise<any>{
+        try{
+        
+            if(await this.restaurantService.findHotel(user,ObjectId(dish.resId)))
+            {
+                const menu = await this.menuRepository.findOne(ObjectId(dish.menuId));
+                //console.log(menu);
+                if(menu)
+                {
+                        dish['dishId']= new ObjectID();
+                        delete dish.menuId;
+                        delete dish.resId;
+                         menu.dishes.push(dish);
+                    await this.menuRepository.save(menu);
+                }
+            }
+
+            
+
+    }
+    catch{}
+            
+
+
+        }
+
     async deleteMenu(user:User,id):Promise<any> {
         const menu = await this.menuRepository.findOne(ObjectId(id))
         if(await this.restaurantService.findHotel(user,menu.restaurantId)){
@@ -192,7 +220,8 @@ export class MenuService {
                         }
                     }
                   // await this.menuRepository.delete(menu.dishes[i]);
-                   delete menu.dishes[i];
+                  menu.dishes.splice(i,1)
+                   //delete menu.dishes[i];
                    await this.menuRepository.save(menu);
 
                    //const afterdeletemenu = await this.menuRepository.findOne(ObjectId(dish.menuId))

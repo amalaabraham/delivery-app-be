@@ -19,8 +19,6 @@ export class Restaurant {
   @Column({ nullable: true })
   contact: number;
 
-  @Column({ type:'jsonb', nullable:true })
-  menulist: any;
 
   @Column({ type:'jsonb', nullable:true })
   photos: any;

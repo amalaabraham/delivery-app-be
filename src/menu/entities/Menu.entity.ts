@@ -15,6 +15,10 @@ export class Menu{
     @Column()
     dishes:any;
 
+    @Column()
+    status:any;
+
+
     constructor(menu?: Partial<Menu>) {
         Object.assign(this, menu);
       }

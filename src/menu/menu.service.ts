@@ -6,6 +6,9 @@ import { RestaurantRepository } from 'src/restaurant/restaurant.repository';
 import { AddMenuDto, AddDishes, UpdateDish } from './dto';
 import { RestaurantService } from 'src/restaurant/restaurant.service';
 import { User } from 'src/auth/entities/User.entity';
+import { Menu } from './entities/Menu.entity';
+import { DeleteDish } from './dto/deletedishdto.dto';
+//import { deleteDish } from './dto/deletedishdto.dto';
 const ObjectId = require('mongodb').ObjectID;
 
 @Injectable()
@@ -69,7 +72,7 @@ export class MenuService {
     async getDishesByMenu(id):Promise<any>{
         try{
             const menu = await this.menuRepository.findOne(ObjectId(id))
-            if(menu)
+            if(menu.status == "ACTIVE")
             {
                 return {
                     success:true,
@@ -145,5 +148,68 @@ export class MenuService {
 
     }
     catch{}
+    }
+
+    async deleteMenu(user:User,id):Promise<any> {
+        const menu = await this.menuRepository.findOne(ObjectId(id))
+        if(await this.restaurantService.findHotel(user,menu.restaurantId)){
+        //const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
+        if(menu){
+            menu.status = "NOT_AVAILABLE"
+        await this.menuRepository.save(menu);
+        return{
+            sucess:true,
+            message: 'Deleted Successfully'
+        }
+    }
+        else{
+            return{
+                sucess:false,
+                message: 'Deletion Failed'
+            }
+        }
+    }
+    
+    
+    }
+
+    async deleteDish(user:User,dish:DeleteDish):Promise<any> {
+        const menu = await this.menuRepository.findOne(ObjectId(dish.menuId))
+        if(await this.restaurantService.findHotel(user,ObjectId(dish.resId))){
+        //const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
+        if(menu){
+            console.log(menu)
+            console.log(menu.dishes.length)
+
+
+            for (var i =0;i<menu.dishes.length;i++)
+                    {
+                       
+                        
+                        if(menu.dishes[i].dishId==dish.dishId)
+                        {
+                            break;
+                        }
+                    }
+                  // await this.menuRepository.delete(menu.dishes[i]);
+                   delete menu.dishes[i];
+                   await this.menuRepository.save(menu);
+
+                   //const afterdeletemenu = await this.menuRepository.findOne(ObjectId(dish.menuId))
+                   //console.log(afterdeletemenu)
+        return{
+            sucess:true,
+            message: 'Deleted Successfully'
+        }
+    }
+        else{
+            return{
+                sucess:false,
+                message: 'Deletion Failed'
+            }
+        }
+    }
+    
+    
     }
 }

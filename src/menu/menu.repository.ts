@@ -18,6 +18,7 @@ export class MenuRepository extends MongoRepository<Menu>{
         }
         menu.dishes=dish;
         menu.restaurantId=id;
+        menu.status="ACTIVE";
         await this.save(menu)
         console.log(menu);
         return menu;

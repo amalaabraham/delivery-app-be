@@ -30,7 +30,7 @@ export class MenuService {
         console.log(restaurant)
         if(restaurant)
         {
-            const menuList = await this.menuRepository.find({restaurantId:id})
+            const menuList = await this.menuRepository.find({restaurantId:id,status:'ACTIVE'})
             console.log(menuList)
             if(menuList.length > 0)
             {

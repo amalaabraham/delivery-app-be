@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MONGOURI } from '../keys';
+//import { MONGOURI } from '../keys';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
@@ -22,7 +22,7 @@ import { BookingController } from './booking/booking.controller';
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({
       type: 'mongodb',
-      url: MONGOURI,
+      url:   'mongodb+srv://jishnu:jishnu@expo.pech5.mongodb.net/jishnu?retryWrites=true&w=majority',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       ssl: true,
       synchronize: true,

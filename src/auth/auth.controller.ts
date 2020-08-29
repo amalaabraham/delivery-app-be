@@ -6,6 +6,7 @@ import { User } from './entities/User.entity';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/Login.dto';
+import { updateUserdto } from './dto/updateUser.dto';
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -37,6 +38,13 @@ export class AuthController {
     @Post('register')
     register(@Body() registerDto: RegisterDto):Promise<any>{
       return this.authService.register(registerDto);
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @Post('updateuser')
+    updateUser(@Req() req, @Body() body: updateUserdto) {
+      return this.authService.updateUser(req.user.email, body);
     }
 
 }

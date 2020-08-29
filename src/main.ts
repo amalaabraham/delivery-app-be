@@ -3,8 +3,10 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import {RedocModule, RedocOptions} from 'nestjs-redoc';
+import * as config from 'config';
 
 async function bootstrap() {
+  const serverConfig = config.get('server');
   const logger = new Logger('Food Delivery System');
   const app = await NestFactory.create(AppModule);
   if (process.env.NODE_ENV === 'development') {
@@ -35,10 +37,10 @@ async function bootstrap() {
   };
   // Instead of using SwaggerModule.setup() you call this module
   await RedocModule.setup('/docs', app, document, redocOptions);
-
+  const port = process.env.PORT || serverConfig.port;
   SwaggerModule.setup('doc', app, document);
-  await app.listen(3001);
-  logger.log(`Application Listening on Port ${3001} `);
+  await app.listen(port);
+  logger.log(`Application Listening on Port ${port} `);
   logger.log(`Api documentation avaliable at "/doc/`);
 }
 bootstrap();

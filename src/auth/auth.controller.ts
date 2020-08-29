@@ -6,7 +6,7 @@ import { User } from './entities/User.entity';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/Login.dto';
-import { updateUserdto } from './dto/updateUser.dto';
+import { updateUserdto } from './dto/UpdateUser.dto';
 
 @Controller('api/v1/auth')
 export class AuthController {

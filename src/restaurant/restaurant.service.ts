@@ -19,7 +19,11 @@ export class RestaurantService {
   ) {}
 
   async getAllRestaurant(): Promise<any> {
-    return await this.restaurantRepository.find();
+     const restaurant = await this.restaurantRepository.find();
+     const ActiveRestaurants = restaurant.filter(
+        obj => obj.status === 'ACTIVE',
+      );
+    return ActiveRestaurants;
 }
 
 async validateUser(user:User): Promise<any> {
@@ -42,13 +46,11 @@ async getRestaurant(user:User): Promise<any> {
     if(await this.validateUser(user)){
     
     const restaurant = await this.restaurantRepository.find({ ownerID:user.id}  )
-    var results = [];
     if(restaurant ) {
-        for(var i=0;i<restaurant.length;i++)
-        {
-            if(restaurant[i].status === "ACTIVE")
-             {results.push(restaurant[i]); }
-        }
+        const ActiveRestaurants = restaurant.filter(
+            obj => obj.status === 'ACTIVE',
+          );
+          const { ...results } = ActiveRestaurants;
         return{
             success:true,
             message:"restaurants retrieved",

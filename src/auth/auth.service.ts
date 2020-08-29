@@ -121,4 +121,40 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async updateUser(email: string, data: any): Promise<any> {
+    try {
+      const user = await this.userRepository.findOne({ email: email });
+      let Error = false;
+      if (user) {
+        user.name = data.name;
+        user.number = data.number;
+        if (data.password !== '') {
+          if (data.password !== data.confirm) {
+            Error = true;
+          } else {
+            user.password = await bcrypt.hash(data.password, 10);
+          }
+        }
+        if (!Error) {
+          await this.userRepository.save(user);
+          return {
+            message: 'User updated successfully',
+            success: true,
+          };
+        } else {
+          return {
+            message: 'Error',
+            success: false,
+          };
+        }
+      }
+    } catch (e) {
+      global.console.log('err', e);
+      return {
+        success: false,
+        message: 'Something went wrong..! Registration failed.',
+      };
+    }
+  }
 }

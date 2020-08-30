@@ -9,7 +9,7 @@ const ObjectId = require('mongodb').ObjectID;
 export class BookingRepository extends MongoRepository<Booking>{
     async createBooking(user: User, data: CreateBookingDto,repo:MenuRepository):Promise<any> {
         console.log(user)
-        const {dishIds,restaurantId,deliveryAdd,deliveryDate}=data;
+        const {dishIds,qty,restaurantId,deliveryAdd,deliveryDate}=data;
         const booking = new Booking()
         booking.restaurantId=restaurantId
         booking.userId=user.id.toString()
@@ -37,8 +37,9 @@ export class BookingRepository extends MongoRepository<Booking>{
                     {
                         if(ObjectId(dishIds[i])==menu[j].dishes[z].id)
                         {
-                            booking.dish.append(menu[j].dishes[z]);
-                            booking.totalAmount+=menu[j].dishes[z].price;
+                            booking.dish.append(menu[j].dishes[z],qty[i]);
+                            booking.totalAmount+=qty[i]*menu[j].dishes[z].price;
+                            
                         }
                     }
                 }

@@ -43,8 +43,9 @@ export class Booking {
   @ObjectIdColumn() 
   deliveryId: ObjectID;
 
-  @Column()
-  totalAmount: Number;
+  @Column({default:0})
+  totalAmount: number;
+
   constructor(booking?: Partial<Booking>) {
     Object.assign(this, booking);
   }

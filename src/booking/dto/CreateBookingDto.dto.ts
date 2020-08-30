@@ -9,6 +9,9 @@ export class CreateBookingDto {
   @ApiProperty({ example: null,isArray:true })
   dishIds: any;
 
+  @ApiProperty({ example: null,isArray:true })
+  qty: any;
+
   @ApiProperty({example:null})
   restaurantId: string;
 

@@ -34,7 +34,7 @@ export class RegisterDto {
   @ApiProperty({ example: null })
   @IsString()
   type: string;
-  
+
   @ApiProperty({ example: null })
   @IsNumber()
   number: number;

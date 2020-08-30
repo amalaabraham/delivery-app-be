@@ -12,11 +12,11 @@ import { ConfigModule } from '@nestjs/config';
 //import {HandlebarsAdapter, MailerModule} from "@nestjs-modules/mailer";
 //import {nestMailer} from "../config/constants";
 
-require('dotenv').config()
+require('dotenv').config();
 //const jwtConfig = config.get('jwt');
 
 @Module({
-  imports:[
+  imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forFeature([User, UserRepository]),
     PassportModule,
@@ -24,7 +24,7 @@ require('dotenv').config()
       secret: process.env.JWT,
       signOptions: { expiresIn: '24h' },
     }),
-   /* MailerModule.forRootAsync({
+    /* MailerModule.forRootAsync({
       useFactory: () => ({
         transport: nestMailer.transport,
         template: {
@@ -39,6 +39,6 @@ require('dotenv').config()
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService]
+  exports: [AuthService],
 })
 export class AuthModule {}

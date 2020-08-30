@@ -11,14 +11,14 @@ import { RestaurantService } from 'src/restaurant/restaurant.service';
 import { RestaurantModule } from 'src/restaurant/restaurant.module';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([Menu,MenuRepository]),
+  imports: [
+    TypeOrmModule.forFeature([Menu, MenuRepository]),
     TypeOrmModule.forFeature([RestaurantRepository]),
     TypeOrmModule.forFeature([UserRepository]),
-    RestaurantModule
+    RestaurantModule,
   ],
   providers: [MenuService],
   controllers: [MenuController],
-  exports: [MenuService]
+  exports: [MenuService],
 })
 export class MenuModule {}

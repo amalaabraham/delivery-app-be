@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
-import {RedocModule, RedocOptions} from 'nestjs-redoc';
+import { RedocModule, RedocOptions } from 'nestjs-redoc';
 import * as config from 'config';
 
 async function bootstrap() {
@@ -29,11 +29,11 @@ async function bootstrap() {
     logo: {
       url: 'https://redocly.github.io/redoc/petstore-logo.png',
       backgroundColor: '#F0F0F0',
-      altText: 'PetStore logo'
+      altText: 'PetStore logo',
     },
     sortPropsAlphabetically: true,
     hideDownloadButton: false,
-    hideHostname: false
+    hideHostname: false,
   };
   // Instead of using SwaggerModule.setup() you call this module
   await RedocModule.setup('/docs', app, document, redocOptions);

@@ -1,21 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsString,
-  IsNumber,
-} from 'class-validator';
-
+import { IsOptional, IsString, IsNumber } from 'class-validator';
 
 export class UpdateDish {
+  @ApiProperty({ example: null })
+  resId: string;
 
-    @ApiProperty({example:null})
-    resId:string;
+  @ApiProperty({ example: null })
+  menuId: string;
 
-    @ApiProperty({example:null})
-    menuId:string;
-
-    @ApiProperty({example:null})
-    dishId:string;
+  @ApiProperty({ example: null })
+  dishId: string;
 
   @ApiProperty({ example: null })
   @IsString()
@@ -27,8 +21,7 @@ export class UpdateDish {
   @IsOptional()
   price: number;
 
-  @ApiProperty({ example:null })
+  @ApiProperty({ example: null })
   @IsOptional()
-  photos:any;
-
+  photos: any;
 }

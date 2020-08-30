@@ -1,9 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsString,
-  IsNumber,
-} from 'class-validator';
+import { IsOptional, IsString, IsNumber } from 'class-validator';
 
 export class UpdateRestaurantDto {
   @ApiProperty({ example: null })
@@ -18,18 +14,15 @@ export class UpdateRestaurantDto {
   @IsNumber()
   contact: number;
 
-  @ApiProperty({ example:null })
+  @ApiProperty({ example: null })
   @IsOptional()
-  photos:any;
+  photos: any;
 
   @ApiProperty({ example: null })
   @IsNumber()
   location: number;
 
-  
-  @ApiProperty({ example:null })
+  @ApiProperty({ example: null })
   @IsOptional()
-  status:string;
-
-
+  status: string;
 }

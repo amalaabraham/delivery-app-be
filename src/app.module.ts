@@ -22,7 +22,8 @@ import { BookingController } from './booking/booking.controller';
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({
       type: 'mongodb',
-      url:   'mongodb+srv://jishnu:jishnu@expo.pech5.mongodb.net/jishnu?retryWrites=true&w=majority',
+      url:
+        'mongodb+srv://jishnu:jishnu@expo.pech5.mongodb.net/jishnu?retryWrites=true&w=majority',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       ssl: true,
       synchronize: true,
@@ -35,7 +36,12 @@ import { BookingController } from './booking/booking.controller';
     MenuModule,
     BookingModule,
   ],
-  controllers: [AuthController,RestaurantController,MenuController,BookingController],
+  controllers: [
+    AuthController,
+    RestaurantController,
+    MenuController,
+    BookingController,
+  ],
   providers: [],
 })
 export class AppModule {}

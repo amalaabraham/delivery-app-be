@@ -8,14 +8,14 @@ import { UserRepository } from 'src/auth/user.repository';
 import { MenuRepository } from 'src/menu/menu.repository';
 
 @Module({
-  imports:[
+  imports: [
     TypeOrmModule.forFeature([Restaurant, RestaurantRepository]),
     TypeOrmModule.forFeature([UserRepository]),
     TypeOrmModule.forFeature([MenuRepository]),
-],
+  ],
 
   controllers: [RestaurantController],
   providers: [RestaurantService],
-  exports:[RestaurantService]
+  exports: [RestaurantService],
 })
 export class RestaurantModule {}

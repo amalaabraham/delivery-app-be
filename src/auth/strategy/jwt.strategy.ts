@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 //const jwtConfig = config.get('jwt');
 
-require('dotenv').config()
+require('dotenv').config();
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,14 +16,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         ExtractJwt.fromBodyField('access_token'),
       ]),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT ,
+      secretOrKey: process.env.JWT,
     });
   }
 
   async validate(payload: any) {
     const { id, email } = payload;
     return {
-      id, email,
+      id,
+      email,
     };
   }
 }

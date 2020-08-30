@@ -1,1 +1,1 @@
-export{CreateBookingDto} from './CreateBookingDto.dto';
+export { CreateBookingDto } from './CreateBookingDto.dto';

@@ -1,10 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ObjectIdColumn, ObjectID } from "typeorm";
-
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ObjectIdColumn,
+  ObjectID,
+} from 'typeorm';
 
 @Entity('restaurant')
 export class Restaurant {
-
- @ObjectIdColumn() 
+  @ObjectIdColumn()
   id: ObjectID;
 
   @Column()
@@ -19,13 +24,12 @@ export class Restaurant {
   @Column({ nullable: true })
   contact: number;
 
-
-  @Column({ type:'jsonb', nullable:true })
+  @Column({ type: 'jsonb', nullable: true })
   photos: any;
 
   @Column({ length: 128 })
   status: string;
-  
+
   @Column({ nullable: true })
   location: string;
 
@@ -38,18 +42,16 @@ export class Restaurant {
   @CreateDateColumn()
   updatedAt: Date;
 
-  @Column({default:0})
+  @Column({ default: 0 })
   totaldishprice: number;
 
-  @Column({default:0})
+  @Column({ default: 0 })
   noofdishes: number;
 
-  @Column({default:0})
+  @Column({ default: 0 })
   rating: number;
-
 
   constructor(restaurant?: Partial<Restaurant>) {
     Object.assign(this, restaurant);
   }
-
 }

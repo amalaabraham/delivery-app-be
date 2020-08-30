@@ -1,26 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsString,
-  IsNumber,
-} from 'class-validator';
+import { IsOptional, IsString, IsNumber } from 'class-validator';
 
 export class CreateBookingDto {
-  @ApiProperty({ example: null,isArray:true })
+  @ApiProperty({ example: null, isArray: true })
   dishIds: any;
 
-  @ApiProperty({ example: null,isArray:true })
+  @ApiProperty({ example: null, isArray: true })
   qty: any;
 
-  @ApiProperty({example:null})
+  @ApiProperty({ example: null })
   restaurantId: string;
 
-  @ApiProperty({example:null})
+  @ApiProperty({ example: null })
   @IsOptional()
-  deliveryAdd:string;
+  deliveryAdd: string;
 
-  @ApiProperty({example:null})
+  @ApiProperty({ example: null })
   @IsOptional()
-  deliveryDate:Date;
-
+  deliveryDate: Date;
 }

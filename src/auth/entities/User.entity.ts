@@ -1,11 +1,17 @@
-import { Entity, Unique, PrimaryGeneratedColumn, Column, CreateDateColumn, ObjectIdColumn, ObjectID } from "typeorm";
-
+import {
+  Entity,
+  Unique,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ObjectIdColumn,
+  ObjectID,
+} from 'typeorm';
 
 @Entity('users')
 @Unique(['email'])
 export class User {
-
-  @ObjectIdColumn() 
+  @ObjectIdColumn()
   id: ObjectID;
 
   @Column({ length: 128 })
@@ -17,7 +23,7 @@ export class User {
   @Column({ length: 128 })
   password: string;
 
-  @Column({ length:128 })
+  @Column({ length: 128 })
   type: string;
 
   @Column({ length: 128 })
@@ -25,7 +31,7 @@ export class User {
 
   @Column({ nullable: true })
   number: number;
-  
+
   @Column({ nullable: true })
   location: number;
 
@@ -38,9 +44,7 @@ export class User {
   @CreateDateColumn()
   updatedAt: Date;
 
-
   constructor(user?: Partial<User>) {
     Object.assign(this, user);
   }
-
 }

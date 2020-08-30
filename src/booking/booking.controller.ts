@@ -14,7 +14,7 @@ export class BookingController {
 
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
-    @Get("All Bookings/:resId")
+    @Get("All_Bookings/:resId")
     getAllBookings(@Req() req,@Param('resId') id: string)
     {
         this.logger.verbose("Retreving all the bookings");

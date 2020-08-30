@@ -27,7 +27,15 @@ export class BookingService {
         if(await this.restaurantService.findHotel(user,id))
         {
            const booking =await this.bookingRepository.find({restaurantId:id})
+           let user;
            if(booking.length>0){
+               for(var i=0;i<booking.length;i++)
+               {
+                   user = await this.userRepository.findOne(ObjectId(booking[i].userId))
+                   delete user.password;
+                   
+                   booking[i]['user']=user;
+               }
                return {
                    status:true,
                    message:'booking retrieved',

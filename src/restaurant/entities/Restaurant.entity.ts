@@ -38,6 +38,15 @@ export class Restaurant {
   @CreateDateColumn()
   updatedAt: Date;
 
+  @Column({default:0})
+  totaldishprice: number;
+
+  @Column({default:0})
+  noofdishes: number;
+
+  @Column({default:0})
+  rating: number;
+
 
   constructor(restaurant?: Partial<Restaurant>) {
     Object.assign(this, restaurant);

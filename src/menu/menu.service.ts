@@ -62,7 +62,7 @@ export class MenuService {
       console.log(user);
       console.log(id);
       if (await this.restaurantService.findHotel(user, id)) {
-        return this.menuRepository.addMenu(id, menu);
+        return this.menuRepository.addMenu(id, menu,this.restaurantRepository);
       }
     } catch (e) {
       throw new HttpException({ message: e }, HttpStatus.BAD_REQUEST);
@@ -137,7 +137,7 @@ export class MenuService {
       if (await this.restaurantService.findHotel(user, ObjectId(adddish.resId))) {
         const menu = await this.menuRepository.findOne(ObjectId(adddish.menuId));
         if (menu){
-            return this.menuRepository.addDish(adddish, user,menu);
+            return this.menuRepository.addDish(adddish, user.id,menu,this.restaurantRepository);
         }
     }
  }   catch (e) {
@@ -152,9 +152,11 @@ export class MenuService {
   async deleteMenu(user: User, id): Promise<any> {
     const menu = await this.menuRepository.findOne(ObjectId(id));
     if (await this.restaurantService.findHotel(user, menu.restaurantId)) {
-      //const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
+      const restaurant = await this.restaurantRepository.findOne(ObjectId(menu.restaurantId))
       if (menu) {
         menu.status = 'NOT_AVAILABLE';
+        restaurant.noofdishes -= menu.dishes.length;
+        await this.restaurantRepository.save(restaurant);
         await this.menuRepository.save(menu);
         return {
           sucess: true,
@@ -171,11 +173,13 @@ export class MenuService {
 
   async deleteDish(user: User, dish: DeleteDish): Promise<any> {
     const menu = await this.menuRepository.findOne(ObjectId(dish.menuId));
+    const restaurant = await this.restaurantRepository.findOne(ObjectId(dish.resId))
     if (await this.restaurantService.findHotel(user, ObjectId(dish.resId))) {
       //const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
       if (menu) {
         console.log(menu);
         console.log(menu.dishes.length);
+
 
         for (var i = 0; i < menu.dishes.length; i++) {
           if (menu.dishes[i].dishId == dish.dishId) {
@@ -187,6 +191,7 @@ export class MenuService {
         //delete menu.dishes[i];
         await this.menuRepository.save(menu);
 
+        restaurant.noofdishes -= 1;
         //const afterdeletemenu = await this.menuRepository.findOne(ObjectId(dish.menuId))
         //console.log(afterdeletemenu)
         return {

@@ -5,6 +5,8 @@ import { UserRepository } from 'src/auth/user.repository';
 import { User } from 'src/auth/entities/User.entity';
 import { ObjectID } from "typeorm";
 import { IsMongoId } from 'class-validator';
+import { RestaurantFilterDto } from './dto/restaurantfilterdto.dto';
+import { MenuRepository } from 'src/menu/menu.repository';
 const ObjectId = require('mongodb').ObjectID;
 
 @Injectable()
@@ -14,16 +16,14 @@ export class RestaurantService {
   constructor(
     @InjectRepository(RestaurantRepository)
     @InjectRepository(UserRepository)
+    @InjectRepository(MenuRepository)
     private readonly restaurantRepository: RestaurantRepository,
-    private readonly userRepository:UserRepository
+    private readonly userRepository:UserRepository,
+    private readonly menuRepository:MenuRepository
   ) {}
 
   async getAllRestaurant(): Promise<any> {
-     const restaurant = await this.restaurantRepository.find();
-     const ActiveRestaurants = restaurant.filter(
-        obj => obj.status === 'ACTIVE',
-      );
-    return ActiveRestaurants;
+    return await this.restaurantRepository.find();
 }
 
 async validateUser(user:User): Promise<any> {
@@ -46,11 +46,13 @@ async getRestaurant(user:User): Promise<any> {
     if(await this.validateUser(user)){
     
     const restaurant = await this.restaurantRepository.find({ ownerID:user.id}  )
+    var results = [];
     if(restaurant ) {
-        const ActiveRestaurants = restaurant.filter(
-            obj => obj.status === 'ACTIVE',
-          );
-          const { ...results } = ActiveRestaurants;
+        for(var i=0;i<restaurant.length;i++)
+        {
+            if(restaurant[i].status === "ACTIVE")
+             {results.push(restaurant[i]); }
+        }
         return{
             success:true,
             message:"restaurants retrieved",
@@ -182,5 +184,68 @@ async updateRestaurant(user:User,id,data:any): Promise <any> {
 }
 }
 
+async filterrestaurant(restaurantfilterdto:RestaurantFilterDto): Promise <any> {
+    const {resname,dish,location,rating} = restaurantfilterdto;
+    let restaurantname,restaurantlocation,menudish,restaurantdish,restaurantrating,restaurant;
+    restaurant = await this.restaurantRepository.find()
+
+   var restauranttest = [];
+    const _ = require("lodash"); 
+ 
+ 
+    console.log(resname,dish,location,rating)
+    
+    console.log(resname)
+    if (resname)
+    {
+         restaurantname = await this.restaurantRepository.find({name:resname})
+          restaurant = _.intersectionWith( 
+            restaurant, restaurantname, _.isEqual);
+
+        //restauranttest = restaurant.map((item, i) => Object.assign({}, item, restaurantname[i]));
+
+    }
+    if (location)
+    {
+         restaurantlocation = await this.restaurantRepository.find({location:location});
+         restaurant = _.intersectionWith( 
+            restaurant, restaurantlocation, _.isEqual);
+
+
+    }
+    if (dish){
+        menudish = await this.menuRepository.find()
+        //console.log(menudish)
+        for(var i = 0; i < menudish.length; i++)
+        {
+            for (var j=0;j<menudish[i].dishes.length;j++)
+            {
+            if(menudish[i].dishes[j].name === dish)
+            {
+                restaurantdish = await this.restaurantRepository.findOne(ObjectId(menudish[i].restaurantId)) 
+                restauranttest.push(restaurantdish) 
+             }
+            }
+        }
+        restaurant = _.intersectionWith( 
+            restaurant, restauranttest, _.isEqual);
+      
+
+        
+    }
+    if (rating)
+    {
+         restaurantrating = await this.restaurantRepository.find({rating:rating});
+         console.log(restaurantrating);
+         restaurant = _.intersectionWith( 
+            restaurant, restaurantrating, _.isEqual);
+
+    }
+
+     
+    return restaurant;
+  
+    //let intersection = restaurantname.filter(x => restaurantlocation.includes(x));
+}
 
 }

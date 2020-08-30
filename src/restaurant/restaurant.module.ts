@@ -5,11 +5,13 @@ import { Restaurant } from './entities/Restaurant.entity';
 import { RestaurantRepository } from './restaurant.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from 'src/auth/user.repository';
+import { MenuRepository } from 'src/menu/menu.repository';
 
 @Module({
   imports:[
     TypeOrmModule.forFeature([Restaurant, RestaurantRepository]),
     TypeOrmModule.forFeature([UserRepository]),
+    TypeOrmModule.forFeature([MenuRepository]),
 ],
 
   controllers: [RestaurantController],

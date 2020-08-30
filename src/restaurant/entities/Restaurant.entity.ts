@@ -27,7 +27,7 @@ export class Restaurant {
   status: string;
   
   @Column({ nullable: true })
-  location: number;
+  location: string;
 
   @Column({ nullable: true })
   lastLogin: Date;

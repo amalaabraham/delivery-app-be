@@ -1,4 +1,4 @@
-import { Controller, Logger, Get, UseGuards, Req, Param, ParseIntPipe, Post, UseInterceptors, Body, UploadedFile, Delete, Patch } from '@nestjs/common';
+import { Controller, Logger, Get, UseGuards, Req, Param, ParseIntPipe, Post, UseInterceptors, Body, UploadedFile, Delete, Patch, Query, ValidationPipe } from '@nestjs/common';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import { RestaurantService } from './restaurant.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -6,6 +6,7 @@ import { ObjectID } from 'mongodb';
 import { RestaurantregisterDto } from './dto/addrestaurantdto.dto';
 import { UpdateRestaurantDto } from './dto/updatedto.dto';
 import { Prop } from '@nestjs/mongoose';
+import { RestaurantFilterDto } from './dto/restaurantfilterdto.dto';
 
 @ApiTags('Restaurant Management')
 @Controller('api/v1/restaurant')
@@ -29,7 +30,7 @@ export class RestaurantController {
     }
 
     @Get(":hotelId")
-    getRestaurantById(@Req() req:any,@Param('hotelId')_id:string) {
+    getRestaurantById(@Req() req:any,@Param('hotelId') _id:string) {
         this.logger.verbose("restaurant retrieved");
         return this.restaurantService.getRestaurantById(req.user,_id);
     }
@@ -50,7 +51,7 @@ export class RestaurantController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     @Delete('/:id')
-    deleteRestaurant(@Req() req:any,@Param('id')id:string) {
+    deleteRestaurant(@Req() req:any,@Param('id') id:string) {
         this.logger.verbose("restaurant removed");
         return this.restaurantService.deleteRestaurant(req.user,id);
     }
@@ -68,6 +69,11 @@ export class RestaurantController {
             return this.restaurantService.updateRestaurant(req.user,id, updateRestaurantDto);
         }
 
+        @Get('/filter/filter')
+        filterrestaurant(@Query() filterDto:RestaurantFilterDto){
+            this.logger.verbose("filtering restaurant ");
+            return this.restaurantService.filterrestaurant(filterDto)
+        }
 
 
 

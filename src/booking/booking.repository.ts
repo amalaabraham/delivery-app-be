@@ -19,25 +19,29 @@ export class BookingRepository extends MongoRepository<Booking>{
         }
         else
         {
-            booking.deliveryAdd=user.location.toString()
+            booking.deliveryAdd="Ernakulam"
         }
         booking.updatedAt=new Date()
         booking.cancelStatus='Pending'
         booking.deliveryDate=deliveryDate
         booking.createdAt=new Date()
         const menu = await repo.find({restaurantId:restaurantId})
-        
+        booking.dish=[];
+        booking.totalAmount=0;
         if(menu.length>0)
         {
+           
             for(var i=0;i<dishIds.length;i++)
             {
                 for (var j=0;j<menu.length;j++)
                 {
-                    for (var z=0;menu[j].dishes.length;z++)
+                    for (var z=0;z<menu[j].dishes.length;z++)
                     {
-                        if(ObjectId(dishIds[i])==menu[j].dishes[z].id)
+                        
+                        if(dishIds[i]==menu[j].dishes[z].dishId)
                         {
-                            booking.dish.append(menu[j].dishes[z],qty[i]);
+                            menu[j].dishes[z]["quantity"]=qty[i];
+                            booking.dish.push(menu[j].dishes[z]);
                             booking.totalAmount+=qty[i]*menu[j].dishes[z].price;
                             
                         }
@@ -48,6 +52,11 @@ export class BookingRepository extends MongoRepository<Booking>{
             booking.paymentDetail=null;
             booking.deliveryId=null;
             booking.deliveryStatus="Pending";
+            await this.save(booking);
+            return booking;
+        }
+        else{
+            return "no menu"
         }
     }
 }

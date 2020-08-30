@@ -54,7 +54,7 @@ export class BookingService {
         console.log(users)
         if(users.type=="customer")
         {
-            await this.bookingRepository.createBooking(users,data,this.menuRepository);
+            return await this.bookingRepository.createBooking(users,data,this.menuRepository);
         }
         else
         {

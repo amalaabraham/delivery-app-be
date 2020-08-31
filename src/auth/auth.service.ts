@@ -42,6 +42,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     try {
+      email = email.toLowerCase();
       const user = await this.userRepository.findOne({ email });
       console.log('user', user);
       if (user) {
@@ -71,12 +72,13 @@ export class AuthService {
           },
         };
       }
+      const Mail=data.email
+      data.email=Mail.toLowerCase();
       const user = await this.userRepository.findOne({ email: data.email });
       if (!user) {
         data.password = await bcrypt.hash(data.password, 10);
         data.status = 'ACTIVE';
         delete data.confirm;
-
         const registerUser = await this.userRepository.save(data);
         console.log(registerUser);
 

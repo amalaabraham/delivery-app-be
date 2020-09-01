@@ -142,7 +142,7 @@ export class RestaurantService {
         if (data.address) {
           restaurant.address = data.address;
         }
-        if (data.latitude) {
+        if (data.location) {
           restaurant.location = data.location;
         }
         if (data.contact) {

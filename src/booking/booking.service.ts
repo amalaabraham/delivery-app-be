@@ -71,6 +71,7 @@ export class BookingService {
 
   async getBookingById(user: User, id): Promise<any> {
     const booking = await this.bookingRepository.findOne(ObjectId(id));
+    
     if (booking) {
       if (user.type == 'customer') {
         return {
@@ -82,6 +83,9 @@ export class BookingService {
         if (
           await this.restaurantService.findHotel(user, booking.restaurantId)
         ) {
+          const user = await this.userRepository.findOne(ObjectId(booking.userId))
+          delete user.password;
+          booking['user']=user;
           return {
             success: true,
             message: 'retiriving booking',

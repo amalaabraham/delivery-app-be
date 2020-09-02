@@ -21,6 +21,7 @@ export class MenuRepository extends MongoRepository<Menu> {
     menu.name = name;
     for (var i = 0; i < dish.length; i++) {
       dish[i]['dishId'] = new ObjectID();
+      dish[i]['status'] = 'AVAILABLE';
       restaurant.totaldishprice += dish[i].price;
     }
     menu.dishes = dish;
@@ -47,6 +48,7 @@ export class MenuRepository extends MongoRepository<Menu> {
 
     for (var i = 0; i < dish.length; i++) {
       dish[i]['dishId'] = new ObjectID();
+      dish[i]['status'] = 'AVAILABLE';
       menu.dishes.push(dish[i]);
       restaurant.totaldishprice += dish[i].price;
     }

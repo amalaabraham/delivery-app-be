@@ -24,4 +24,8 @@ export class UpdateDish {
   @ApiProperty({ example: null })
   @IsOptional()
   photos: any;
+
+  @ApiProperty({ example: null })
+  @IsOptional()
+  status: string;
 }

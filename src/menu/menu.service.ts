@@ -17,6 +17,7 @@ import { AddMoreDish } from './dto/addmoredishesdto.dto';
 //import { deleteDish } from './dto/deletedishdto.dto';
 const ObjectId = require('mongodb').ObjectID;
 import { ObjectID } from 'mongodb';
+import { stat } from 'fs';
 
 @Injectable()
 export class MenuService {
@@ -125,6 +126,9 @@ export class MenuService {
           }
           if (dish.photos) {
             menu.dishes[i].photos = dish.photos;
+          }
+          if(dish.status) {
+            menu.dishes[i].status = dish.status;
           }
           await this.menuRepository.save(menu);
         }

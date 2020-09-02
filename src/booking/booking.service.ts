@@ -74,6 +74,8 @@ export class BookingService {
     
     if (booking) {
       if (user.type == 'customer') {
+        const restaurant = await this.restaurantRepository.findOne(ObjectId(booking.restaurantId))
+        booking['restaurant']=restaurant
         return {
           success: true,
           message: 'retrived booking',

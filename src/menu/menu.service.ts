@@ -14,6 +14,7 @@ import { User } from 'src/auth/entities/User.entity';
 import { Menu } from './entities/Menu.entity';
 import { DeleteDish } from './dto/deletedishdto.dto';
 import { AddMoreDish } from './dto/addmoredishesdto.dto';
+import { editMenuName } from './dto/EditMenuName.dto';
 //import { deleteDish } from './dto/deletedishdto.dto';
 const ObjectId = require('mongodb').ObjectID;
 import { ObjectID } from 'mongodb';
@@ -70,9 +71,47 @@ export class MenuService {
     }
   }
 
+  async editMenuName(body: editMenuName, user: User): Promise<any> {
+    try {
+      const id = body.menuId;
+      const newName = body.name;
+      const menu = await this.menuRepository.findOne(ObjectId(id));
+      var Result;
+      if (menu && menu.status == 'ACTIVE') {
+        if (
+          await this.restaurantService.findHotel(
+            user,
+            ObjectId(menu.restaurantId),
+          )
+        ) {
+          menu.name = newName;
+          await this.menuRepository.save(menu);
+          Result = {
+            success: true,
+            message: 'Menu name updates',
+          };
+        } else {
+          Result = {
+            success: false,
+            message: 'Error',
+          };
+        }
+      } else {
+        Result = {
+          success: false,
+          message: 'Error',
+        };
+      }
+      return Result;
+    } catch (e) {
+      throw new HttpException({ message: e }, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   async getDishesByMenu(id): Promise<any> {
     try {
       const menu = await this.menuRepository.findOne(ObjectId(id));
+      console.log(menu);
       if (menu.status == 'ACTIVE') {
         return {
           success: true,
@@ -127,7 +166,7 @@ export class MenuService {
           if (dish.photos) {
             menu.dishes[i].photos = dish.photos;
           }
-          if(dish.status) {
+          if (dish.status) {
             menu.dishes[i].status = dish.status;
           }
           await this.menuRepository.save(menu);

@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { MenuService } from './menu.service';
-import { AddMenuDto, UpdateDish, AddDishes } from './dto';
+import { AddMenuDto, UpdateDish, AddDishes, editMenuName } from './dto';
 import { AuthGuard } from '@nestjs/passport';
 import { DeleteDish } from './dto/deletedishdto.dto';
 import { AddMoreDish } from './dto/addmoredishesdto.dto';
@@ -30,6 +30,14 @@ export class MenuController {
     this.logger.verbose('retrieving Menu');
     console.log(id);
     return this.menuService.getMenuById(id);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('updateMenu')
+  updateMenu(@Body() body: editMenuName, @Req() req: any) {
+    this.logger.verbose('updating menu name');
+    return this.menuService.editMenuName(body, req.user);
   }
 
   @ApiBearerAuth()

@@ -6,6 +6,7 @@ import { User } from 'src/auth/entities/User.entity';
 import { AddCustomerDto } from './dto/AddCustomerDto.dto';
 import { UserRepository } from 'src/auth/user.repository';
 import { UpdateCustomerDto } from './dto';
+import { ObjectID } from 'typeorm';
 
 const ObjectId = require('mongodb').ObjectID;
 @Injectable()
@@ -70,6 +71,29 @@ export class CustomersService {
 
         }
         else{
+            return {
+                success:false,
+                message:'no such customer'
+            }
+        }
+    }
+    async deleteCustomer(user:User,id):Promise<any>{
+        const customer = await this.customerRepository.findOne(ObjectId(id));
+        if(customer)
+        {
+            if(user.id == customer.resId)
+            {
+                await this.customerRepository.remove(customer);
+                return {
+                    success:true,
+                    message:'customer deleted successfully'
+                }
+            }
+            else{
+                return 'unauthorized'
+            }
+        }
+        else {
             return {
                 success:false,
                 message:'no such customer'

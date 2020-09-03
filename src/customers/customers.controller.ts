@@ -1,8 +1,8 @@
-import { Controller, Logger, UseGuards, Post, Req, Body, Get } from '@nestjs/common';
+import { Controller, Logger, UseGuards, Post, Req, Body, Get, Query, Param } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
 import { AuthGuard } from '@nestjs/passport';
-import { AddCustomerDto } from './dto';
+import { AddCustomerDto, UpdateCustomerDto } from './dto';
 
 @ApiTags("Customer Managment")
 @Controller("api/v1/customer")
@@ -28,5 +28,13 @@ export class CustomersController {
         this.logger.verbose("Retreiving Customer");
         console.log(req.user);
         return this.customerService.getCustomer(req.user);
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @Post('updateCustomerDetails/:id')
+    updateCustomer(@Req() req:any,@Param('id') id: string,@Body() updateCustomerDto:UpdateCustomerDto){
+        this.logger.verbose("Updating Customer");
+        return this.customerService.updateCustomer(req.user,id,updateCustomerDto);
     }
 }

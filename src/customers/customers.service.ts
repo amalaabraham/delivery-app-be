@@ -5,6 +5,7 @@ import { Customer } from './entities/Customer.entity';
 import { User } from 'src/auth/entities/User.entity';
 import { AddCustomerDto } from './dto/AddCustomerDto.dto';
 import { UserRepository } from 'src/auth/user.repository';
+import { UpdateCustomerDto } from './dto';
 
 const ObjectId = require('mongodb').ObjectID;
 @Injectable()
@@ -35,6 +36,44 @@ export class CustomersService {
         }
         else{
             return 'unauthorized'
+        }
+    }
+
+    async updateCustomer(user:User,id,data:UpdateCustomerDto):Promise<any>{
+        const customer = await this.customerRepository.findOne(ObjectId(id))
+        if(customer)
+        {
+            if(customer.resId == user.id)
+            {
+                if(data.name)
+                {
+                    customer.name = data.name
+                }
+                if(data.contact)
+                {
+                    customer.contact = data.contact
+                }
+                if(data.email)
+                {
+                    customer.email = data.email
+                }
+                await this.customerRepository.save(customer)
+                return {
+                    success:true,
+                    message:'customer updated'
+                }
+            }
+            else{
+                return 'unauthorized'
+            }
+        
+
+        }
+        else{
+            return {
+                success:false,
+                message:'no such customer'
+            }
         }
     }
 }

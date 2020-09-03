@@ -10,7 +10,7 @@ export class CustomerRepository extends MongoRepository<Customer> {
         customer.resId = user.id;
         customer.name = data.name;
         customer.email = data.email;
-        customer.number = data.number;
+        customer.contact = data.contact;
         await this.save(customer);
         return customer;
     }

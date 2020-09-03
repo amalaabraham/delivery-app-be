@@ -23,7 +23,7 @@ import {
     email: string;
   
     @Column({ nullable: true })
-    number: number;
+    contact: number;
   
   
     constructor(customer?: Partial<Customer>) {

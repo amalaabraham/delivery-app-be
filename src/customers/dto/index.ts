@@ -1,0 +1,1 @@
+export {AddCustomerDto} from './AddCustomerDto.dto';

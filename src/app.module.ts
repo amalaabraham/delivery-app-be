@@ -13,6 +13,7 @@ import { MenuModule } from './menu/menu.module';
 import { MenuController } from './menu/menu.controller';
 import { BookingModule } from './booking/booking.module';
 import { BookingController } from './booking/booking.controller';
+import { CustomersModule } from './customers/customers.module';
 @Module({
   imports: [
     AuthModule,
@@ -35,6 +36,7 @@ import { BookingController } from './booking/booking.controller';
     RestaurantModule,
     MenuModule,
     BookingModule,
+    CustomersModule,
   ],
   controllers: [
     AuthController,

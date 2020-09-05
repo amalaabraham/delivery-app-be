@@ -2,7 +2,7 @@ import { Controller, Logger, UseGuards, Post, Req, Body, Get, Query, Param, Dele
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
 import { AuthGuard } from '@nestjs/passport';
-import { AddCustomerDto, UpdateCustomerDto } from './dto';
+import { AddCustomerDto, UpdateCustomerDto, AddLoyalityPoints } from './dto';
 
 @ApiTags("Customer Managment")
 @Controller("api/v1/customer")
@@ -44,5 +44,14 @@ export class CustomersController {
     deleteCustomer(@Req() req:any,@Param('custId') id:string){
         this.logger.verbose('Delete Customer')
         return this.customerService.deleteCustomer(req.user,id);
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @Post('addLoyalityPoints/:custId')
+    addLoyalityPoints(@Req() req:any,@Param('custId') id:string,@Body() addLoyalityPoints:AddLoyalityPoints)
+    {
+        this.logger.verbose('Add Loyality Points to Customer')
+        return this.customerService.addLoyalityPoints(req.user,id,addLoyalityPoints);
     }
 }

@@ -5,7 +5,7 @@ import { Customer } from './entities/Customer.entity';
 import { User } from 'src/auth/entities/User.entity';
 import { AddCustomerDto } from './dto/AddCustomerDto.dto';
 import { UserRepository } from 'src/auth/user.repository';
-import { UpdateCustomerDto } from './dto';
+import { UpdateCustomerDto, AddLoyalityPoints } from './dto';
 import { ObjectID } from 'typeorm';
 
 const ObjectId = require('mongodb').ObjectID;
@@ -87,4 +87,20 @@ export class CustomersService {
       };
     }
   }
+
+  async addLoyalityPoints(user:User,id,data:AddLoyalityPoints):Promise<any>{
+    const customer = await this.customerRepository.findOne(ObjectId(id));
+    if (customer) {
+      if (user.id == customer.resId) {
+        customer.loyalty+=data.loyality;
+      }else {
+        return 'unauthorized';
+      }
+    } else {
+      return {
+        success: false,
+        message: 'no such customer',
+      };
+    }
+    }
 }

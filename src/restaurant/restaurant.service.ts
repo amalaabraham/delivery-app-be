@@ -191,7 +191,7 @@ export class RestaurantService {
       restaurantdish,
       restaurantrating,
       restaurant;
-    restaurant = await this.restaurantRepository.find();
+    restaurant = await this.restaurantRepository.find({approved:1});
 
     var restauranttest = [];
     const _ = require('lodash');

@@ -51,6 +51,9 @@ export class Restaurant {
   @Column({ default: 0 })
   rating: number;
 
+  @Column({default:0})
+  approved: number;
+
   constructor(restaurant?: Partial<Restaurant>) {
     Object.assign(this, restaurant);
   }

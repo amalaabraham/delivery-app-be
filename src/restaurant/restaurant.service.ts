@@ -14,6 +14,7 @@ import { ObjectID } from 'typeorm';
 import { IsMongoId } from 'class-validator';
 import { RestaurantFilterDto } from './dto/restaurantfilterdto.dto';
 import { MenuRepository } from 'src/menu/menu.repository';
+import { UpdateApprovalStatus } from './dto/updateApprovalStatus.dto';
 const ObjectId = require('mongodb').ObjectID;
 
 @Injectable()
@@ -40,7 +41,7 @@ export class RestaurantService {
     const found = await this.userRepository.findOne(ObjectId(user.id));
     // console.log(found);
     //console.log(found.type,found.email)
-    if (found.type === 'owner') {
+    if (found.type === 'owner'|| found.type === 'admin') {
       //  console.log(found);
       return found;
     } else {
@@ -49,7 +50,17 @@ export class RestaurantService {
   }
 
   async getRestaurant(user: User): Promise<any> {
-    if (await this.validateUser(user)) {
+    let value;;
+    if (value = await this.validateUser(user)) {
+      if(value.type === 'admin')
+      {
+        const adminres = await this.restaurantRepository.find({approved:0})
+        return {
+          success:true,
+          message:'pending restaurants',
+          data:adminres
+        }
+      }
       const restaurant = await this.restaurantRepository.find({
         ownerID: user.id,
       });
@@ -230,5 +241,31 @@ export class RestaurantService {
     return restaurant;
 
     //let intersection = restaurantname.filter(x => restaurantlocation.includes(x));
+  }
+
+  async acceptOrRejectRestaurant(user:User,id,data:UpdateApprovalStatus):Promise<any>{
+    const user1 = await this.userRepository.findOne(ObjectId(user.id))
+    if(user1.type == 'admin')
+    {
+      const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
+      if(restaurant)
+      {
+        if(data.approval == 1)
+        {
+          restaurant.approved = 1
+        }
+        else 
+        {
+          await this.restaurantRepository.remove(restaurant)
+        }
+      }
+      else{
+        return "restaurant not found"
+      }
+    }
+    else 
+    {
+      return "unauthorized"
+    }
   }
 }

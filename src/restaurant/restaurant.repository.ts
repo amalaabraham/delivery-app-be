@@ -17,6 +17,7 @@ export class RestaurantRepository extends MongoRepository<Restaurant> {
     restaurant.noofdishes = 0;
     restaurant.totaldishprice = 0;
     restaurant.rating = 0;
+    restaurant.approved = 0;
     await this.save(restaurant);
     console.log(restaurant);
 

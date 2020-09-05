@@ -23,6 +23,7 @@ import { RestaurantregisterDto } from './dto/addrestaurantdto.dto';
 import { UpdateRestaurantDto } from './dto/updatedto.dto';
 import { Prop } from '@nestjs/mongoose';
 import { RestaurantFilterDto } from './dto/restaurantfilterdto.dto';
+import { UpdateApprovalStatus } from './dto/updateApprovalStatus.dto';
 
 @ApiTags('Restaurant Management')
 @Controller('api/v1/restaurant')
@@ -93,4 +94,14 @@ export class RestaurantController {
     this.logger.verbose('filtering restaurant ');
     return this.restaurantService.filterrestaurant(filterDto);
   }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get('PendingApproval/:resId')
+  acceptOrReject(@Req() req:any,@Param('resId') id: string,@Body() updateApproval:UpdateApprovalStatus)
+  {
+    this.logger.verbose('approve or reject');
+    return this.restaurantService.acceptOrRejectRestaurant(req.user,id,updateApproval)
+  }
+
 }

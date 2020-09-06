@@ -245,10 +245,18 @@ export class RestaurantService {
         {
           restaurant.approved = 1
           await this.restaurantRepository.save(restaurant);
+          return {
+            success:true,
+            message:'Approved'
+          }
         }
         else 
         {
           await this.restaurantRepository.remove(restaurant)
+          return {
+            success:true,
+            message:'Rejected'
+          }
         }
       }
       else{

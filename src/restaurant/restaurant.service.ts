@@ -244,6 +244,7 @@ export class RestaurantService {
         if(data.approval == 1)
         {
           restaurant.approved = 1
+          await this.restaurantRepository.save(restaurant);
         }
         else 
         {

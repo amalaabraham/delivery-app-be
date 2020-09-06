@@ -50,17 +50,8 @@ export class RestaurantService {
   }
 
   async getRestaurant(user: User): Promise<any> {
-    let value;;
-    if (value = await this.validateUser(user)) {
-      if(value.type === 'admin')
-      {
-        const adminres = await this.restaurantRepository.find({approved:0})
-        return {
-          success:true,
-          message:'pending restaurants',
-          data:adminres
-        }
-      }
+    
+    if (await this.validateUser(user)) {
       const restaurant = await this.restaurantRepository.find({
         ownerID: user.id,
       });

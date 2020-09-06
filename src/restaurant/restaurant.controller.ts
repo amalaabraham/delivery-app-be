@@ -97,7 +97,7 @@ export class RestaurantController {
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
-  @Get('PendingApproval/:resId')
+  @Post('PendingApproval/:resId')
   acceptOrReject(@Req() req:any,@Param('resId') id: string,@Body() updateApproval:UpdateApprovalStatus)
   {
     this.logger.verbose('approve or reject');

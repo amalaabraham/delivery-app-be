@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CustomerRepository } from './customer.repository';
 import { Customer } from './entities/Customer.entity';
@@ -23,7 +23,7 @@ export class CustomersService {
       return await this.customerRepository.addCustomer(user, data);
     } catch (E) {
       console.log(E);
-      return "unsuccessfull"+E;
+      throw new HttpException({detail:"bad request"},HttpStatus.BAD_REQUEST);
     }
   }
 

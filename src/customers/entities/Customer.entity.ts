@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 
 @Entity('customer')
-@Unique(['email'])
 export class Customer {
   @ObjectIdColumn()
   id: ObjectID;

@@ -9,11 +9,7 @@ export class CustomerRepository extends MongoRepository<Customer> {
     const customer = new Customer();
     customer.resId = user.id;
     customer.name = data.name;
-    if(data.email)
-      {customer.email = data.email;}
-    else{
-      customer.email = null;
-    }
+    customer.email = data.email;
     customer.contact = data.contact;
     customer.loyalty = data.loyalty;
     await this.save(customer);

@@ -23,7 +23,7 @@ export class CustomersService {
       return await this.customerRepository.addCustomer(user, data);
     } catch (E) {
       console.log(E);
-      return "unsuccessfull";
+      return "unsuccessfull"+E;
     }
   }
 

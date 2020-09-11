@@ -107,7 +107,7 @@ export class RestaurantService {
     const hotel = await this.restaurantRepository.findOne(ObjectId(id));
     // console.log(found)
     //  console.log(hotel)
-    if (found.type === 'owner' && ObjectId(hotel.ownerID).equals(found.id)) {
+    if ((found.type === 'owner' && ObjectId(hotel.ownerID).equals(found.id))||(found.type === 'admin')) {
       //  console.log(found)
       return found;
     } else {

@@ -28,4 +28,8 @@ export class UpdateDish {
   @ApiProperty({ example: null })
   @IsOptional()
   status: string;
+
+  @ApiProperty({ example: null })
+  @IsOptional()
+  category: string;
 }

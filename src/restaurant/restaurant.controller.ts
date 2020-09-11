@@ -37,6 +37,12 @@ export class RestaurantController {
     return this.restaurantService.getAllRestaurant();
   }
 
+  @Get('/restaurantnum')
+  restaurantnum() {
+    this.logger.verbose(`retrieving restaurant number`);
+    return this.restaurantService.getRestaurantNum();
+  }
+
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Get('/userRestaurants')
@@ -104,4 +110,5 @@ export class RestaurantController {
     return this.restaurantService.acceptOrRejectRestaurant(req.user,id,updateApproval)
   }
 
+  
 }

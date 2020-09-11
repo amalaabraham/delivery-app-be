@@ -169,6 +169,9 @@ export class MenuService {
           if (dish.status) {
             menu.dishes[i].status = dish.status;
           }
+          if (dish.category) {
+            menu.dishes[i].category = dish.category;
+          }
           await this.menuRepository.save(menu);
         }
       }

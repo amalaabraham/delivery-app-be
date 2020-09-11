@@ -268,4 +268,11 @@ export class RestaurantService {
       return "unauthorized"
     }
   }
+
+  async getRestaurantNum(): Promise<any> {
+   const [restaurant,count] =  await this.restaurantRepository.findAndCount({status:"ACTIVE" , approved:1});
+   return count;
+   
+
+}
 }

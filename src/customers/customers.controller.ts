@@ -14,6 +14,13 @@ export class CustomersController {
 
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
+    @Get('allCustomers')
+    getAllCustomers(@Req() req:any){
+        this.logger.verbose("Get All Customers");
+        return this.customerService.getAllCustomers(req.user);
+    }
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
     @Post('addCustomer')
     addCustomer(@Req() req:any,@Body() addCustomerDto:AddCustomerDto){
         this.logger.verbose("Adding Customer");

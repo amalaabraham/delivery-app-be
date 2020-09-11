@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CustomerRepository } from './customer.repository';
 import { Customer } from './entities/Customer.entity';
@@ -102,6 +102,34 @@ export class CustomersService {
         success: false,
         message: 'no such customer',
       };
+    }
+    }
+
+    async getAllCustomers(user:User):Promise<any>{
+      const userLoggedIn = await this.userRepository.findOne(ObjectId(user.id))
+      if(userLoggedIn.type == 'admin'){
+      const customers = await this.customerRepository.find()
+      if(customers)
+      {
+        return {
+          success:true,
+          message:"retrieved all customers",
+          data:customers
+        }
+      }
+      else
+      {
+        return {
+          success:false,
+          message:"no customers"
+        }
+      }
+    }
+    else{
+      return {
+        success:false,
+        message:'user unauthorized'
+      }
     }
     }
 }

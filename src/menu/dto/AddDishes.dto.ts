@@ -14,4 +14,8 @@ export class AddDishes {
   @ApiProperty({ example: null })
   @IsOptional()
   photos: any;
+
+  @ApiProperty({example:null})
+  @IsString()
+  category:string;
 }

@@ -314,5 +314,37 @@ export class RestaurantService {
       throw new HttpException({ message: e }, HttpStatus.BAD_REQUEST);
     }
   }
+  async deleteBanner(user: User,id,bannerid ): Promise<any> {
+    
+    if (await this.findHotel(user, ObjectId(id))) {
+      //const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
+      const restaurant = await this.restaurantRepository.findOne(ObjectId(id));
+      if (restaurant) {
+
+        for (var i = 0; i < restaurant.banner.length; i++) {
+          if (restaurant.banner[i].bannerId == bannerid) {
+            break;
+          }
+        }
+        // await this.menuRepository.delete(menu.dishes[i]);
+        restaurant.banner.splice(i, 1);
+        //delete menu.dishes[i];
+        await this.restaurantRepository.save(restaurant);
+
+        
+        //const afterdeletemenu = await this.menuRepository.findOne(ObjectId(dish.menuId))
+        //console.log(afterdeletemenu)
+        return {
+          sucess: true,
+          message: 'Deleted Successfully',
+        };
+      } else {
+        return {
+          sucess: false,
+          message: 'Deletion Failed',
+        };
+      }
+    }
+  }
 
 }

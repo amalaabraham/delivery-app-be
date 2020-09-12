@@ -131,6 +131,14 @@ export class RestaurantController {
     return this.restaurantService.updatebanner(body, req.user,id);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('deletebanner/:bannerId/:resId')
+  deleteDish(@Req() req: any, @Param('resId') id: string,@Param('bannerId') bannerid: string ) {
+    this.logger.verbose('banner removed');
+    return this.restaurantService.deleteBanner(req.user, id,bannerid);
+  }
+
 
 
 }

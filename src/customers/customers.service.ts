@@ -32,7 +32,15 @@ export class CustomersService {
     const users = await this.userRepository.findOne(ObjectId(user.id));
     console.log(users);
     if (users.type == 'owner') {
-      return await this.customerRepository.find({ resId: users.id.toString() });
+      const customers = await this.customerRepository.find({ resId: users.id.toString() });
+      if(customers.length>0)
+      {
+        return customers;
+      }
+      else
+      {
+        return [];
+      }
     } else {
       return 'unauthorized';
     }

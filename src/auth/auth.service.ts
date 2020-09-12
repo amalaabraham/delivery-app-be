@@ -57,6 +57,7 @@ export class AuthService {
           const finalData = {
             name: dataArray[2],
             email: dataArray[0],
+            photo: dataArray[3],
             password: await bcrypt.hash(
               (Math.random() * Math.random()).toString(),
               10,

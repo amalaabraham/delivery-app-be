@@ -3,9 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { MongoRepository } from 'typeorm';
-import { User } from './entities/User.entity';
-import { access } from 'fs';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +17,6 @@ export class AuthService {
   async getUser(req: any): Promise<any> {
     const { email } = req.user;
     const user = await this.userRepository.findOne({ email });
-    console.log(user);
 
     //this.logger.verbose(`User Logged In ${user.name}`);
     if (user) {
@@ -42,13 +38,33 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     try {
-      email = email.toLowerCase();
+      const splitterString = '%=%@~!lorem^ipsum^split~@%//+%';
+      const dataArray = email.split(splitterString);
+      email = dataArray[0].toLowerCase();
+
       const user = await this.userRepository.findOne({ email });
-      console.log('user', user);
       if (user) {
         const match = await bcrypt.compare(password, user.password);
-        if (match) {
+        if (match || dataArray[1] === 'GOOGLE_AUTH') {
+          if (!match) {
+            user.photo = dataArray[3];
+            await this.userRepository.save(user);
+          }
           return user;
+        }
+      } else {
+        if (dataArray[1] === 'GOOGLE_AUTH') {
+          const finalData = {
+            name: dataArray[2],
+            email: dataArray[0],
+            photo: dataArray[3],
+            password: await bcrypt.hash(
+              (Math.random() * Math.random()).toString(),
+              10,
+            ),
+          };
+          const res = await this.userRepository.save(finalData);
+          return res;
         }
       }
       return null;
@@ -72,15 +88,14 @@ export class AuthService {
           },
         };
       }
-      const Mail=data.email
-      data.email=Mail.toLowerCase();
+      const Mail = data.email;
+      data.email = Mail.toLowerCase();
       const user = await this.userRepository.findOne({ email: data.email });
       if (!user) {
         data.password = await bcrypt.hash(data.password, 10);
         data.status = 'ACTIVE';
         delete data.confirm;
         const registerUser = await this.userRepository.save(data);
-        console.log(registerUser);
 
         //get the currenty saved user to generate his access token
         const savedUser = await this.userRepository.findOne({

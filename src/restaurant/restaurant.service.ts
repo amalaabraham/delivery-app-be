@@ -15,6 +15,7 @@ import { IsMongoId } from 'class-validator';
 import { RestaurantFilterDto } from './dto/restaurantfilterdto.dto';
 import { MenuRepository } from 'src/menu/menu.repository';
 import { UpdateApprovalStatus } from './dto/updateApprovalStatus.dto';
+import { AddBanner } from './dto/AddBannerDto.dto';
 const ObjectId = require('mongodb').ObjectID;
 
 @Injectable()
@@ -77,12 +78,14 @@ export class RestaurantService {
   }
 
   async getRestaurantById(user: User, id): Promise<any> {
+    try{
     const restaurant = await this.restaurantRepository.findOne(ObjectId(id));
     if (restaurant.status === 'ACTIVE') {
       return restaurant;
     } else {
       throw new NotFoundException('No Such Restaurant');
     }
+  }catch(e){}
   }
 
   async addrestaurant(data: any, user: User): Promise<any> {
@@ -275,4 +278,41 @@ export class RestaurantService {
    
 
 }
+
+  async addBanner(addbanner: AddBanner, user: User, id): Promise<any> {
+    try {
+      if (
+        await this.findHotel(user, ObjectId(id))
+      ) {
+
+        return this.restaurantRepository.addBanner(
+          addbanner,
+          user,
+          id,
+        );
+
+      }
+    } catch (e) {
+      throw new HttpException({ message: e }, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async updatebanner(addbanner: AddBanner, user: User,id): Promise<any> {
+    try {
+      if (
+        await this.findHotel(user, ObjectId(id))
+      ) {
+        
+          return this.restaurantRepository.updateBanner(
+            addbanner,
+            user,
+            id
+          );
+        
+      }
+    } catch (e) {
+      throw new HttpException({ message: e }, HttpStatus.BAD_REQUEST);
+    }
+  }
+
 }

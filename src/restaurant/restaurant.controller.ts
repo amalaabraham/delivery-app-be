@@ -14,6 +14,7 @@ import {
   Patch,
   Query,
   ValidationPipe,
+  Put,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { RestaurantService } from './restaurant.service';
@@ -24,6 +25,7 @@ import { UpdateRestaurantDto } from './dto/updatedto.dto';
 import { Prop } from '@nestjs/mongoose';
 import { RestaurantFilterDto } from './dto/restaurantfilterdto.dto';
 import { UpdateApprovalStatus } from './dto/updateApprovalStatus.dto';
+import { AddBanner } from './dto/AddBannerDto.dto';
 
 @ApiTags('Restaurant Management')
 @Controller('api/v1/restaurant')
@@ -42,6 +44,8 @@ export class RestaurantController {
     this.logger.verbose(`retrieving restaurant number`);
     return this.restaurantService.getRestaurantNum();
   }
+
+ 
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
@@ -95,6 +99,8 @@ export class RestaurantController {
     );
   }
 
+ 
+
   @Get('/filter/filter')
   filterrestaurant(@Query() filterDto: RestaurantFilterDto) {
     this.logger.verbose('filtering restaurant ');
@@ -110,5 +116,21 @@ export class RestaurantController {
     return this.restaurantService.acceptOrRejectRestaurant(req.user,id,updateApproval)
   }
 
-  
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('addbanner/:resId')
+  addbanner(@Req() req: any,@Param('resId') id: string,@Body() body:AddBanner,) {
+    this.logger.verbose('adding banner');
+    return this.restaurantService.addBanner(body, req.user,id);
+  }
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('updateBanner/:resId')
+  updateBanner(@Body() body: AddBanner, @Req() req: any,@Param('resId') id: string) {
+    this.logger.verbose('updating banner name');
+    return this.restaurantService.updatebanner(body, req.user,id);
+  }
+
+
+
 }

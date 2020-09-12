@@ -54,6 +54,9 @@ export class Restaurant {
   @Column({default:0})
   approved: number;
 
+  @Column({type:'jsonb',nullable:true})
+  banner: any;
+
   constructor(restaurant?: Partial<Restaurant>) {
     Object.assign(this, restaurant);
   }

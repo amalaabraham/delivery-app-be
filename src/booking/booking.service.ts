@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RestaurantRepository } from 'src/restaurant/restaurant.repository';
 import { BookingRepository } from './booking.repository';
@@ -6,8 +6,10 @@ import { MenuRepository } from 'src/menu/menu.repository';
 import { RestaurantService } from 'src/restaurant/restaurant.service';
 import { UserRepository } from 'src/auth/user.repository';
 import { User } from 'src/auth/entities/User.entity';
-import { CreateBookingDto, DateRangeDto } from './dto';
+import { CreateBookingDto, DateRangeDto, UpdateDeliveryStatus } from './dto';
 import { Booking } from './entities/Booking.entity';
+import { UpdateApprovalStatus } from 'src/restaurant/dto/updateApprovalStatus.dto';
+import { ObjectID } from 'typeorm';
 const ObjectId = require('mongodb').ObjectID;
 @Injectable()
 export class BookingService {
@@ -157,4 +159,33 @@ export class BookingService {
       }
   }
 }
+
+  async updateDeliveryStatus(user:User,id,data:UpdateDeliveryStatus):Promise<any>{
+    const booking = await this.bookingRepository.findOne(ObjectId(id))
+    if(booking)
+    {
+      if(await this.restaurantService.findHotel(user, booking.restaurantId))
+      {
+        booking.deliveryStatus=data.deliveryStatus;
+        await this.bookingRepository.save(booking);
+        return {
+          success:true,
+          message:'Delivery Status Changed To'+data.deliveryStatus
+        }
+      }
+      else{
+        return {
+          success: false,
+          message: 'unauthorized',
+        };
+      }
+    }
+    else{
+      return{
+        success:false,
+        message:'no such booking'
+      }
+    }
+
+  }
 }

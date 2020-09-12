@@ -6,12 +6,12 @@ import {
   UseGuards,
   Req,
   Post,
-  Body,
+  Body
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { BookingService } from './booking.service';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateBookingDto, DateRangeDto } from './dto';
+import { CreateBookingDto, DateRangeDto, UpdateDeliveryStatus } from './dto';
 
 @ApiTags('Booking Management')
 @Controller('api/v1/booking')
@@ -58,5 +58,13 @@ export class BookingController {
   getBookingOfRestaurantByDate(@Req() req,@Param('resId') id:string,@Body() dateRangeDto:DateRangeDto){
     this.logger.verbose('getAllBookingsOfRestaurantByDate')
     return this.bookingService.getAllBookingsOfRestaurantByDate(req.user,id,dateRangeDto);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('updateBooking/:bookId')
+  updateDeliveryStatus(@Req() requ,@Param('bookId') id:string,@Body() updateDeliveryStatus:UpdateDeliveryStatus){
+    this.logger.verbose('updating delivery Status');
+    return this.bookingService.updateDeliveryStatus(requ.user,id,updateDeliveryStatus);
   }
 }

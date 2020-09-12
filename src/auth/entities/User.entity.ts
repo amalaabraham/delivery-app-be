@@ -44,6 +44,9 @@ export class User {
   @CreateDateColumn()
   updatedAt: Date;
 
+  @Column({ nullable: true })
+  photo: string;
+
   constructor(user?: Partial<User>) {
     Object.assign(this, user);
   }

@@ -110,6 +110,10 @@ export class BookingService {
   async getAllBookingOfUser(user: User): Promise<any> {
     const bookings = await this.bookingRepository.find({ userId: user.id });
     if (bookings.length > 0) {
+      for (var i = 0; i < bookings.length; i++) {
+        const restaurant = await this.restaurantRepository.findOne(ObjectId(bookings[i].restaurantId))
+        bookings[i]['restaurantName']=restaurant.name;
+      }
       return {
         status: true,
         message: 'bookings retrieved',

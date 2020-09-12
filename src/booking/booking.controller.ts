@@ -11,7 +11,7 @@ import {
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { BookingService } from './booking.service';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateBookingDto } from './dto';
+import { CreateBookingDto, DateRangeDto } from './dto';
 
 @ApiTags('Booking Management')
 @Controller('api/v1/booking')
@@ -50,5 +50,13 @@ export class BookingController {
   getBookingDetailOfUser(@Req() req) {
     this.logger.verbose('Retreive bookings of user');
     return this.bookingService.getAllBookingOfUser(req.user);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('getBookingOfRestaurantByDate/:resId')
+  getBookingOfRestaurantByDate(@Req() req,@Param('resId') id:string,@Body() dateRangeDto:DateRangeDto){
+    this.logger.verbose('getAllBookingsOfRestaurantByDate')
+    return this.bookingService.getAllBookingsOfRestaurantByDate(req.user,id,dateRangeDto);
   }
 }

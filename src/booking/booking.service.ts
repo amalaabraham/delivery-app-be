@@ -6,7 +6,8 @@ import { MenuRepository } from 'src/menu/menu.repository';
 import { RestaurantService } from 'src/restaurant/restaurant.service';
 import { UserRepository } from 'src/auth/user.repository';
 import { User } from 'src/auth/entities/User.entity';
-import { CreateBookingDto } from './dto';
+import { CreateBookingDto, DateRangeDto } from './dto';
+import { Booking } from './entities/Booking.entity';
 const ObjectId = require('mongodb').ObjectID;
 @Injectable()
 export class BookingService {
@@ -123,7 +124,37 @@ export class BookingService {
       return {
         status: false,
         message: 'no bookings exist',
+        data:[]
       };
     }
   }
+  
+  async filterByDate(bookings:Booking[],fromDate,toDate){
+    var result = []
+    for (var i = 0; i < bookings.length; i++) {
+      if((bookings[i].createdAt>=fromDate)&&(bookings[i].createdAt<=toDate))
+      {
+        result.push(bookings[i])
+      }
+  }
+  return result
+}
+
+  async getAllBookingsOfRestaurantByDate(user:User,id,data:DateRangeDto):Promise<any>{
+    if (await this.restaurantService.findHotel(user, id)) {
+      const bookings = await this.bookingRepository.find({restaurantId:id})
+      const toDate = new Date(data.to)
+      const fromDate = new Date(data.from)
+      
+      if(bookings.length>0){
+        const result = await this.filterByDate(bookings,fromDate,toDate)
+        console.log(result)
+        return result
+      }
+      else
+      {
+        return 'no booking'
+      }
+  }
+}
 }

@@ -67,4 +67,21 @@ export class BookingController {
     this.logger.verbose('updating delivery Status');
     return this.bookingService.updateDeliveryStatus(requ.user,id,updateDeliveryStatus);
   }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('generateSalesReport/:resId')
+  generateSalesReport(@Req() req,@Param('resId') id:string,@Body() dateRangeDto:DateRangeDto)
+  {
+    this.logger.verbose('generate sales report')
+    return this.bookingService.generateSalesReport(req.user,id,dateRangeDto);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('generateItemReport/:resId')
+  generateItemReport(@Req() req,@Param('resId') id:string,@Body() dateRangeDto:DateRangeDto){
+    this.logger.verbose('generate item sales report')
+    return this.bookingService.generateItemsReport(req.user,id,dateRangeDto);
+  }
 }

@@ -102,10 +102,14 @@ export class AuthService {
       } else {
         const mail = dataArray[1].toLowerCase();
         const user = await this.userRepository.findOne({ email: mail });
-        const match = await bcrypt.compare(password, user.password);
-        if (match) {
-          delete user.password;
-          returnData = user;
+        if (user) {
+          const match = await bcrypt.compare(password, user.password);
+          if (match) {
+            delete user.password;
+            returnData = user;
+          } else {
+            returnData = null;
+          }
         } else {
           returnData = null;
         }

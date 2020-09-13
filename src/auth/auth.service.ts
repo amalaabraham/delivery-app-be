@@ -65,14 +65,18 @@ export class AuthService {
             if (user.type) {
               if (user.type === password) {
                 user.photo = res.picture;
-                await this.userRepository.save(user);
-                returnData = user;
+                await this.userRepository.save(user).then(res => {
+                  delete res.password;
+                  returnData = res;
+                });
               }
             } else {
               user.type = password;
               user.photo = res.picture;
-              await this.userRepository.save(user);
-              returnData = user;
+              await this.userRepository.save(user).then(res => {
+                delete res.password;
+                returnData = res;
+              });
             }
           } else {
             const user = {

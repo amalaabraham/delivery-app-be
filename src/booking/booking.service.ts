@@ -10,6 +10,7 @@ import { CreateBookingDto, DateRangeDto, UpdateDeliveryStatus } from './dto';
 import { Booking } from './entities/Booking.entity';
 import { UpdateApprovalStatus } from 'src/restaurant/dto/updateApprovalStatus.dto';
 import { ObjectID } from 'typeorm';
+import { tmpdir } from 'os';
 const ObjectId = require('mongodb').ObjectID;
 @Injectable()
 export class BookingService {
@@ -132,6 +133,7 @@ export class BookingService {
   }
   
   async filterByDate(bookings:Booking[],fromDate,toDate){
+    console.log(fromDate,toDate)
     var result = []
     for (var i = 0; i < bookings.length; i++) {
       if((bookings[i].createdAt>=fromDate)&&(bookings[i].createdAt<=toDate))
@@ -170,7 +172,7 @@ export class BookingService {
         await this.bookingRepository.save(booking);
         return {
           success:true,
-          message:'Delivery Status Changed To'+data.deliveryStatus
+          message:'Delivery Status Changed To '+data.deliveryStatus
         }
       }
       else{
@@ -188,4 +190,91 @@ export class BookingService {
     }
 
   }
+
+  async generateSalesReport(user:User,id,data:DateRangeDto):Promise<any>{
+    if(await this.restaurantService.findHotel(user,id)){
+      const bookings = await this.bookingRepository.find({restaurantId:id})
+      let fromDate = new Date(data.from);
+      
+      const toDate = new Date(data.to)
+      
+      console.log(fromDate,toDate);
+      let fromDateEnd;
+      let result;
+      let finalData=[];
+      let itemPrice=0,adminAmount=0,vendorAmount=0;
+      while(fromDate<=toDate)
+      {
+        itemPrice=0,adminAmount=0,vendorAmount=0;
+        fromDateEnd=new Date(fromDate.getFullYear(),fromDate.getMonth(),fromDate.getDate()+1);
+        fromDateEnd.setUTCHours(23, 59, 59, 999)
+        console.log(fromDate,fromDateEnd)
+        result = await this.filterByDate(bookings,fromDate,fromDateEnd);
+        console.log(result)
+        if(result.length>0)
+        {
+          for(var i=0;i<result.length;i++)
+          {
+            itemPrice+=result[i].totalAmount;
+          }
+          adminAmount=itemPrice*11/100;
+          vendorAmount = itemPrice-adminAmount;
+          console.log(itemPrice,adminAmount,vendorAmount);
+          finalData.push({
+            "Date":fromDate.getDate().toString()+'-'+(fromDate.getMonth()+1).toString()+'-'+fromDate.getFullYear().toString(),
+            "itemPrice":itemPrice,
+            "adminAmount":adminAmount,
+            "vendorAmount":vendorAmount
+          })
+        }
+        console.log(fromDate.getDate()+1)
+        fromDate.setDate(fromDate.getDate()+1);
+        
+      }
+      return finalData;
+    }
+  }
+  async generateItemsReport(user:User,id,data:DateRangeDto):Promise<any>{
+    if(await this.restaurantService.findHotel(user,id)){
+      const bookings = await this.bookingRepository.find({restaurantId:id})
+      let fromDate = new Date(data.from);
+      
+      const toDate = new Date(data.to)
+      toDate.setUTCHours(23, 59, 59, 999)
+      const menu = await this.menuRepository.find({restaurantId:id})
+      console.log(fromDate,toDate);
+      let result;
+      let finalData=[];
+      let itemPrice=0,salesCount=0;
+      result = await this.filterByDate(bookings,fromDate,toDate)
+      if(result.length>0)
+      {
+        for(var i=0;i<menu.length;i++)
+        {
+          for(var j=0;j<menu[i].dishes.length;j++)
+          {
+            itemPrice=0,salesCount=0;
+            for(var k=0;k<result.length;k++)
+            {
+              for(var z=0;z<result[k].dish.length;z++)
+              {
+                if(result[k].dish[z].name==menu[i].dishes[j].name)
+                {
+                  salesCount+=result[k].dish[z].quantity;
+                }
+              }
+            }
+            itemPrice = (menu[i].dishes[j].price * salesCount);
+            finalData.push({
+              "menuName" : menu[i].name,
+              "itemName" : menu[i].dishes[j].name,
+              "itemPrice":itemPrice,
+              "salesCount":salesCount
+            })
+          }
+        }
+        return finalData
+      }
+  }
+}
 }

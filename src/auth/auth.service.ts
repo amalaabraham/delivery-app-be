@@ -63,6 +63,7 @@ export class AuthService {
           });
           if (user) {
             user.photo = res.picture;
+            user.type = dataArray[2];
             await this.userRepository.save(user);
             returnData = user;
           } else {
@@ -70,6 +71,7 @@ export class AuthService {
               name: res.name,
               email: res.email,
               photo: res.picture,
+              type: dataArray[2],
               password: await bcrypt.hash(
                 (Math.random() * Math.random()).toString(),
                 10,

@@ -104,7 +104,7 @@ export class AuthService {
         const user = await this.userRepository.findOne({ email: mail });
         if (user) {
           const match = await bcrypt.compare(password, user.password);
-          if (match) {
+          if (match && user.type === dataArray[2]) {
             delete user.password;
             returnData = user;
           } else {

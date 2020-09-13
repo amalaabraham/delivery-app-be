@@ -89,9 +89,10 @@ export class AuthService {
                 10,
               ),
             };
-            await this.userRepository.save(user);
-            delete user.password;
-            returnData = res;
+            await this.userRepository.save(user).then(res => {
+              delete res.password;
+              returnData = res;
+            });
           }
         });
       } else {

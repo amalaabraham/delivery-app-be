@@ -62,16 +62,24 @@ export class AuthService {
             email: res.email,
           });
           if (user) {
-            user.photo = res.picture;
-            user.type = dataArray[2];
-            await this.userRepository.save(user);
-            returnData = user;
+            if (user.type) {
+              if (user.type === password) {
+                user.photo = res.picture;
+                await this.userRepository.save(user);
+                returnData = user;
+              }
+            } else {
+              user.type = password;
+              user.photo = res.picture;
+              await this.userRepository.save(user);
+              returnData = user;
+            }
           } else {
             const user = {
               name: res.name,
               email: res.email,
               photo: res.picture,
-              type: dataArray[2],
+              type: password,
               password: await bcrypt.hash(
                 (Math.random() * Math.random()).toString(),
                 10,

@@ -95,7 +95,8 @@ export class AuthService {
           }
         });
       } else {
-        const mail = dataArray[1].toLowerCase();
+        console.log(dataArray);
+        const mail = dataArray[0].toLowerCase();
         const user = await this.userRepository.findOne({ email: mail });
         const match = await bcrypt.compare(password, user.password);
         if (match) {

@@ -58,12 +58,21 @@ export class AuthService {
       let returnData = null;
       if (loginType === 'GOOGLE_AUTH') {
         await this.tokenVerifier(dataArray[1]).then(async res => {
-          const user = await this.userRepository.findOne({
-            email: res.email,
-          });
-          if (user) {
-            if (user.type) {
-              if (user.type === password) {
+          if (res) {
+            const user = await this.userRepository.findOne({
+              email: res.email,
+            });
+            if (user) {
+              if (user.type) {
+                if (user.type === password) {
+                  user.photo = res.picture;
+                  await this.userRepository.save(user).then(res => {
+                    delete res.password;
+                    returnData = res;
+                  });
+                }
+              } else {
+                user.type = password;
                 user.photo = res.picture;
                 await this.userRepository.save(user).then(res => {
                   delete res.password;
@@ -71,28 +80,23 @@ export class AuthService {
                 });
               }
             } else {
-              user.type = password;
-              user.photo = res.picture;
+              const user = {
+                name: res.name,
+                email: res.email,
+                photo: res.picture,
+                type: password,
+                password: await bcrypt.hash(
+                  (Math.random() * Math.random()).toString(),
+                  10,
+                ),
+              };
               await this.userRepository.save(user).then(res => {
                 delete res.password;
                 returnData = res;
               });
             }
           } else {
-            const user = {
-              name: res.name,
-              email: res.email,
-              photo: res.picture,
-              type: password,
-              password: await bcrypt.hash(
-                (Math.random() * Math.random()).toString(),
-                10,
-              ),
-            };
-            await this.userRepository.save(user).then(res => {
-              delete res.password;
-              returnData = res;
-            });
+            returnData = null;
           }
         });
       } else {

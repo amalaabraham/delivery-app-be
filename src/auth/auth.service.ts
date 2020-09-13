@@ -100,13 +100,14 @@ export class AuthService {
           }
         });
       } else {
-        console.log(dataArray);
-        const mail = dataArray[0].toLowerCase();
+        const mail = dataArray[1].toLowerCase();
         const user = await this.userRepository.findOne({ email: mail });
         const match = await bcrypt.compare(password, user.password);
         if (match) {
           delete user.password;
           returnData = user;
+        } else {
+          returnData = null;
         }
       }
       return returnData;

@@ -4,7 +4,6 @@ import { UserRepository } from './user.repository';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import * as AuthValidator from 'google-auth-library';
-import { async } from 'rxjs';
 
 @Injectable()
 export class AuthService {

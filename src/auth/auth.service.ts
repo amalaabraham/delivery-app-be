@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import * as AuthValidator from 'google-auth-library';
+import { async } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -35,39 +37,60 @@ export class AuthService {
   async getAllUsers(req: any): Promise<any> {
     return await this.userRepository.find();
   }
-
+  async tokenVerifier(token: string): Promise<any> {
+    async function verify() {
+      const CLIENT_ID =
+        '851553848714-023jl52skl877gsrkabla89chm0sscgu.apps.googleusercontent.com';
+      const client = new AuthValidator.OAuth2Client(CLIENT_ID);
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      return payload;
+    }
+    return verify().catch(console.error);
+  }
   async validateUser(email: string, password: string): Promise<any> {
     try {
       const splitterString = '%=%@~!lorem^ipsum^split~@%//+%';
       const dataArray = email.split(splitterString);
-      email = dataArray[0].toLowerCase();
-
-      const user = await this.userRepository.findOne({ email });
-      if (user) {
-        const match = await bcrypt.compare(password, user.password);
-        if (match || dataArray[1] === 'GOOGLE_AUTH') {
-          if (!match) {
-            user.photo = dataArray[3];
+      const loginType = dataArray[0];
+      let returnData = null;
+      if (loginType === 'GOOGLE_AUTH') {
+        await this.tokenVerifier(dataArray[1]).then(async res => {
+          const user = await this.userRepository.findOne({
+            email: res.email,
+          });
+          if (user) {
+            user.photo = res.picture;
             await this.userRepository.save(user);
+            returnData = user;
+          } else {
+            const user = {
+              name: res.name,
+              email: res.email,
+              photo: res.picture,
+              password: await bcrypt.hash(
+                (Math.random() * Math.random()).toString(),
+                10,
+              ),
+            };
+            await this.userRepository.save(user);
+            delete user.password;
+            returnData = res;
           }
-          return user;
-        }
+        });
       } else {
-        if (dataArray[1] === 'GOOGLE_AUTH') {
-          const finalData = {
-            name: dataArray[2],
-            email: dataArray[0],
-            photo: dataArray[3],
-            password: await bcrypt.hash(
-              (Math.random() * Math.random()).toString(),
-              10,
-            ),
-          };
-          const res = await this.userRepository.save(finalData);
-          return res;
+        const mail = dataArray[1].toLowerCase();
+        const user = await this.userRepository.findOne({ email: mail });
+        const match = await bcrypt.compare(password, user.password);
+        if (match) {
+          delete user.password;
+          returnData = user;
         }
       }
-      return null;
+      return returnData;
     } catch (err) {
       global.console.log('err', err);
       return {

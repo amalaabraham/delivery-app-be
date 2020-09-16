@@ -16,6 +16,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/Login.dto';
 import { updateUserdto } from './dto/UpdateUser.dto';
+import { UpdateAddress } from './dto/UpdateAddress.dto';
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -53,5 +54,12 @@ export class AuthController {
   @Post('updateuser')
   updateUser(@Req() req, @Body() body: updateUserdto) {
     return this.authService.updateUser(req.user.email, body);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('addUserAddress')
+  addUserAddress(@Req() req,@Body() body:UpdateAddress){
+    return this.authService.addUserAddress(req.user,body);
   }
 }

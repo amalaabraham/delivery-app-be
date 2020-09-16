@@ -4,6 +4,10 @@ import { UserRepository } from './user.repository';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import * as AuthValidator from 'google-auth-library';
+import { User } from './entities/User.entity';
+import { UpdateAddress } from './dto/UpdateAddress.dto';
+import { ObjectID } from 'mongodb';
+const ObjectId = require('mongodb').ObjectID;
 
 @Injectable()
 export class AuthService {
@@ -145,6 +149,10 @@ export class AuthService {
       if (!user) {
         data.password = await bcrypt.hash(data.password, 10);
         data.status = 'ACTIVE';
+        if(data.address)
+        {
+          data.address['id']=new ObjectID();
+        }
         delete data.confirm;
         const registerUser = await this.userRepository.save(data);
 
@@ -224,5 +232,15 @@ export class AuthService {
         message: 'Something went wrong..! Registration failed.',
       };
     }
+  }
+  
+  async addUserAddress(user:User,data:UpdateAddress):Promise<any>{
+    const user1 = await this.userRepository.findOne(ObjectId(user.id));
+    if(user1)
+    {
+      data['id']=new ObjectId();
+      user1.address.push(data);
+    }
+
   }
 }

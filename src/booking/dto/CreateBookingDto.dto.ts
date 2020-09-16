@@ -13,7 +13,7 @@ export class CreateBookingDto {
 
   @ApiProperty({ example: null })
   @IsOptional()
-  deliveryAdd: string;
+  deliveryAdd: any;
 
   @ApiProperty({ example: null })
   @IsOptional()

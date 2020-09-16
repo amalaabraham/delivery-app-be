@@ -39,7 +39,7 @@ export class Booking {
   deliveryDate: Date;
 
   @Column({ length: 128 })
-  deliveryAdd: string;
+  deliveryAdd: any;
 
   @CreateDateColumn()
   createdAt: Date;

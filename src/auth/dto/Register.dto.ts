@@ -39,6 +39,9 @@ export class RegisterDto {
   @IsNumber()
   number: number;
 
+  @ApiProperty({example:null})
+  address:any;
+
   @ApiProperty({ example: null })
   @IsNumber()
   location: number;

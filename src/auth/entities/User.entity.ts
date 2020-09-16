@@ -29,6 +29,9 @@ export class User {
   @Column({ length: 128 })
   status: string;
 
+  @Column()
+  address:any;
+
   @Column({ nullable: true })
   number: number;
 

@@ -239,7 +239,15 @@ export class AuthService {
     if(user1)
     {
       data['id']=new ObjectId();
-      user1.address.push(data);
+      if(user1.address.length>0)
+      {
+        user1.address.push(data);
+      }
+      else
+      {
+        user1.address=[data];
+      }
+      await this.userRepository.save(user1);
     }
 
   }

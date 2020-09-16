@@ -29,17 +29,19 @@ export class RestaurantRepository extends MongoRepository<Restaurant> {
   }
   async addBanner(
     addbanner: AddBanner,
-    
+
     user: User,
     id,
   ): Promise<any> {
     const { banner } = addbanner;
-   
+
     const restaurant = await this.findOne(ObjectId(id));
     for (var i = 0; i < banner.length; i++) {
+      banner[i] = {
+        banner: banner[i],
+      };
       banner[i]['bannerId'] = new ObjectID();
     }
-
     restaurant.banner = banner;
     await this.save(restaurant);
     console.log(restaurant);
@@ -48,22 +50,23 @@ export class RestaurantRepository extends MongoRepository<Restaurant> {
 
   async updateBanner(
     addbanner: AddBanner,
-    
+
     user: User,
-    id
+    id,
   ): Promise<any> {
     const { banner } = addbanner;
-   
+
     const restaurant = await this.findOne(ObjectId(id));
     for (var i = 0; i < banner.length; i++) {
+      banner[i] = {
+        banner: banner[i],
+      };
       banner[i]['bannerId'] = new ObjectID();
       restaurant.banner.push(banner[i]);
     }
-    
-    
+
     await this.save(restaurant);
     console.log(restaurant);
     return restaurant;
   }
-
 }

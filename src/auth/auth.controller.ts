@@ -6,7 +6,8 @@ import {
   UseGuards,
   Get,
   Request,
-  Req,
+  Req, 
+  Param
 } from '@nestjs/common';
 import { RegisterDto } from './dto/Register.dto';
 import { AuthService } from './auth.service';
@@ -61,5 +62,13 @@ export class AuthController {
   @Post('addUserAddress')
   addUserAddress(@Req() req,@Body() body:UpdateAddress){
     return this.authService.addUserAddress(req.user,body);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('deleteUserAddress/:id')
+  deleteUserAddress(@Req() req,@Param('id') id:string)
+  {
+    return this.authService.deleteUserAddress(req.user,id);
   }
 }

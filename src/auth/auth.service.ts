@@ -252,4 +252,39 @@ export class AuthService {
     }
 
   }
+
+  async deleteUserAddress(user:User,id):Promise<any>
+  {
+    const user1=await this.userRepository.findOne(user.id);
+    var flag=0;
+    if(user1)
+    {
+      if(user1.address)
+      {
+        for(var i=0;i<user1.address.length;i++)
+        {
+          if(user1.address[i].id==ObjectId(id))
+          {
+            flag=1;
+            break;
+          }
+        }
+        if(flag==1)
+        {
+          user1.address.slice(i,1);
+          await this.userRepository.save(user1);
+          return {
+            success:true,
+            message:'deleted address'
+          }
+        }
+        else{
+          return 'no such address found'
+        }
+        
+      }
+    }
+
+
+  }
 }

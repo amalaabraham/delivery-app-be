@@ -192,7 +192,7 @@ export class BookingService {
         }
       }
       else if (await this.restaurantService.findHotel(user, booking.restaurantId)) {
-        booking.deliveryStatus = data.deliveryStatus;
+        booking.deliveryStatus = data.deliveryStatus.toLowerCase();
         await this.bookingRepository.save(booking);
         return {
           success: true,

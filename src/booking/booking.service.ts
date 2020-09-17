@@ -165,19 +165,10 @@ export class BookingService {
   async updateDeliveryStatus(user:User,id,data:UpdateDeliveryStatus):Promise<any>{
     const booking = await this.bookingRepository.findOne(ObjectId(id))
     const user1= await this.userRepository.findOne(ObjectId(user.id))
-    
+    console.log((user1.type=='customer')&&(user1.id==booking.userId))
     if(booking)
     {
-      if(await this.restaurantService.findHotel(user, booking.restaurantId))
-      {
-        booking.deliveryStatus=data.deliveryStatus;
-        await this.bookingRepository.save(booking);
-        return {
-          success:true,
-          message:'Delivery Status Changed To '+data.deliveryStatus
-        }
-      }
-      else if((user1.type=='customer')&&(user1.id==booking.userId))
+      if((user1.type=='customer')&&(user1.id==booking.userId))
       {
         if(data.deliveryStatus=='cancelled'){
           booking.deliveryStatus=data.deliveryStatus;
@@ -186,6 +177,15 @@ export class BookingService {
             success:true,
             message:'Delivery Status Changed To '+data.deliveryStatus
           }
+        }
+      }
+      else if(await this.restaurantService.findHotel(user, booking.restaurantId))
+      {
+        booking.deliveryStatus=data.deliveryStatus;
+        await this.bookingRepository.save(booking);
+        return {
+          success:true,
+          message:'Delivery Status Changed To '+data.deliveryStatus
         }
       }
       else{

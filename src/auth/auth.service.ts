@@ -239,8 +239,9 @@ export class AuthService {
     if(user1)
     {
       data['id']=new ObjectId();
-      if(user1.address.length>0)
+      if(user1.address)
       {
+        
         user1.address.push(data);
       }
       else

@@ -165,6 +165,7 @@ export class BookingService {
   async updateDeliveryStatus(user:User,id,data:UpdateDeliveryStatus):Promise<any>{
     const booking = await this.bookingRepository.findOne(ObjectId(id))
     const user1= await this.userRepository.findOne(ObjectId(user.id))
+    
     if(booking)
     {
       if(await this.restaurantService.findHotel(user, booking.restaurantId))
@@ -176,7 +177,7 @@ export class BookingService {
           message:'Delivery Status Changed To '+data.deliveryStatus
         }
       }
-      else if((user1.type=='customer')&&(user1.id==ObjectId(booking.userId)))
+      else if((user1.type=='customer')&&(user1.id==booking.userId))
       {
         if(data.deliveryStatus=='cancelled'){
           booking.deliveryStatus=data.deliveryStatus;

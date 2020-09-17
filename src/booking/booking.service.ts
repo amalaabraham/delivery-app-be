@@ -183,7 +183,7 @@ export class BookingService {
     if (booking) {
       if (user1.type == 'customer' && user1.id == booking.userId) {
         if (data.deliveryStatus == 'CANCELLED' || 'cancelled') {
-          booking.deliveryStatus = data.deliveryStatus;
+          booking.deliveryStatus = data.deliveryStatus.toLowerCase();
           await this.bookingRepository.save(booking);
           return {
             success: true,

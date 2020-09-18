@@ -163,6 +163,9 @@ export class MenuService {
           if (dish.price) {
             menu.dishes[i].price = dish.price;
           }
+          if (dish.discount) {
+            menu.dishes[i].discount = dish.discount;
+          }
           if (dish.photos) {
             menu.dishes[i].photos = dish.photos;
           }

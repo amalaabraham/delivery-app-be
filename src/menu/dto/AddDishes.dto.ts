@@ -12,10 +12,14 @@ export class AddDishes {
   price: number;
 
   @ApiProperty({ example: null })
+  @IsNumber()
+  discount: number;
+
+  @ApiProperty({ example: null })
   @IsOptional()
   photos: any;
 
-  @ApiProperty({example:null})
+  @ApiProperty({ example: null })
   @IsString()
-  category:string;
+  category: string;
 }

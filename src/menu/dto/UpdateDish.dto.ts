@@ -30,6 +30,10 @@ export class UpdateDish {
   status: string;
 
   @ApiProperty({ example: null })
+  @IsNumber()
+  discount: number;
+
+  @ApiProperty({ example: null })
   @IsOptional()
   category: string;
 }

@@ -263,7 +263,7 @@ export class AuthService {
       {
         for(var i=0;i<user1.address.length;i++)
         {
-          if(user1.address[i].id==ObjectId(id))
+          if(user1.address[i].id==id)
           {
             flag=1;
             break;
@@ -271,7 +271,9 @@ export class AuthService {
         }
         if(flag==1)
         {
-          user1.address.slice(i,1);
+          console.log(i)
+          user1.address.splice(i,1);
+          console.log(user1)
           await this.userRepository.save(user1);
           return {
             success:true,

@@ -42,7 +42,7 @@ export class RestaurantService {
     const found = await this.userRepository.findOne(ObjectId(user.id));
     // console.log(found);
     //console.log(found.type,found.email)
-    if (found.type === 'owner'|| found.type === 'admin') {
+    if (found.type === 'owner' || found.type === 'admin') {
       //  console.log(found);
       return found;
     } else {
@@ -51,7 +51,6 @@ export class RestaurantService {
   }
 
   async getRestaurant(user: User): Promise<any> {
-    
     if (await this.validateUser(user)) {
       const restaurant = await this.restaurantRepository.find({
         ownerID: user.id,
@@ -78,14 +77,14 @@ export class RestaurantService {
   }
 
   async getRestaurantById(user: User, id): Promise<any> {
-    try{
-    const restaurant = await this.restaurantRepository.findOne(ObjectId(id));
-    if (restaurant.status === 'ACTIVE') {
-      return restaurant;
-    } else {
-      throw new NotFoundException('No Such Restaurant');
-    }
-  }catch(e){}
+    try {
+      const restaurant = await this.restaurantRepository.findOne(ObjectId(id));
+      if (restaurant.status === 'ACTIVE') {
+        return restaurant;
+      } else {
+        throw new NotFoundException('No Such Restaurant');
+      }
+    } catch (e) {}
   }
 
   async addrestaurant(data: any, user: User): Promise<any> {
@@ -110,7 +109,10 @@ export class RestaurantService {
     const hotel = await this.restaurantRepository.findOne(ObjectId(id));
     // console.log(found)
     //  console.log(hotel)
-    if ((found.type === 'owner' && ObjectId(hotel.ownerID).equals(found.id))||(found.type === 'admin')) {
+    if (
+      (found.type === 'owner' && ObjectId(hotel.ownerID).equals(found.id)) ||
+      found.type === 'admin'
+    ) {
       //  console.log(found)
       return found;
     } else {
@@ -156,7 +158,9 @@ export class RestaurantService {
         if (data.status) {
           restaurant.status = data.status;
         }
-
+        if (data.timings) {
+          restaurant.timings = data.timings;
+        }
         if (data.photos) {
           restaurant.photos = data.photos;
         }
@@ -185,7 +189,7 @@ export class RestaurantService {
       restaurantdish,
       restaurantrating,
       restaurant;
-    restaurant = await this.restaurantRepository.find({approved:1});
+    restaurant = await this.restaurantRepository.find({ approved: 1 });
 
     var restauranttest = [];
     const _ = require('lodash');
@@ -237,90 +241,69 @@ export class RestaurantService {
     //let intersection = restaurantname.filter(x => restaurantlocation.includes(x));
   }
 
-  async acceptOrRejectRestaurant(user:User,id,data:UpdateApprovalStatus):Promise<any>{
-    const user1 = await this.userRepository.findOne(ObjectId(user.id))
-    if(user1.type == 'admin')
-    {
-      const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
-      if(restaurant)
-      {
-        if(data.approval == 1)
-        {
-          restaurant.approved = 1
+  async acceptOrRejectRestaurant(
+    user: User,
+    id,
+    data: UpdateApprovalStatus,
+  ): Promise<any> {
+    const user1 = await this.userRepository.findOne(ObjectId(user.id));
+    if (user1.type == 'admin') {
+      const restaurant = await this.restaurantRepository.findOne(ObjectId(id));
+      if (restaurant) {
+        if (data.approval == 1) {
+          restaurant.approved = 1;
           await this.restaurantRepository.save(restaurant);
           return {
-            success:true,
-            message:'Approved'
-          }
-        }
-        else 
-        {
-          await this.restaurantRepository.remove(restaurant)
+            success: true,
+            message: 'Approved',
+          };
+        } else {
+          await this.restaurantRepository.remove(restaurant);
           return {
-            success:true,
-            message:'Rejected'
-          }
+            success: true,
+            message: 'Rejected',
+          };
         }
+      } else {
+        return 'restaurant not found';
       }
-      else{
-        return "restaurant not found"
-      }
-    }
-    else 
-    {
-      return "unauthorized"
+    } else {
+      return 'unauthorized';
     }
   }
 
   async getRestaurantNum(): Promise<any> {
-   const [restaurant,count] =  await this.restaurantRepository.findAndCount({status:"ACTIVE" , approved:1});
-   return count;
-   
-
-}
+    const [restaurant, count] = await this.restaurantRepository.findAndCount({
+      status: 'ACTIVE',
+      approved: 1,
+    });
+    return count;
+  }
 
   async addBanner(addbanner: AddBanner, user: User, id): Promise<any> {
     try {
-      if (
-        await this.findHotel(user, ObjectId(id))
-      ) {
-
-        return this.restaurantRepository.addBanner(
-          addbanner,
-          user,
-          id,
-        );
-
+      if (await this.findHotel(user, ObjectId(id))) {
+        return this.restaurantRepository.addBanner(addbanner, user, id);
       }
     } catch (e) {
       throw new HttpException({ message: e }, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async updatebanner(addbanner: AddBanner, user: User,id): Promise<any> {
+  async updatebanner(addbanner: AddBanner, user: User, id): Promise<any> {
     try {
-      if (
-        await this.findHotel(user, ObjectId(id))
-      ) {
-        
-          return this.restaurantRepository.updateBanner(
-            addbanner,
-            user,
-            id
-          );
-        
+      if (await this.findHotel(user, ObjectId(id))) {
+        return this.restaurantRepository.updateBanner(addbanner, user, id);
       }
     } catch (e) {
       throw new HttpException({ message: e }, HttpStatus.BAD_REQUEST);
     }
   }
-  async deleteBanner(user: User,id,bannerid ): Promise<any> {
-    
+  async deleteBanner(user: User, id, bannerid): Promise<any> {
     if (await this.findHotel(user, ObjectId(id))) {
       //const restaurant = await this.restaurantRepository.findOne(ObjectId(id))
       const restaurant = await this.restaurantRepository.findOne(ObjectId(id));
       if (restaurant) {
-
         for (var i = 0; i < restaurant.banner.length; i++) {
           if (restaurant.banner[i].bannerId == bannerid) {
             break;
@@ -331,7 +314,6 @@ export class RestaurantService {
         //delete menu.dishes[i];
         await this.restaurantRepository.save(restaurant);
 
-        
         //const afterdeletemenu = await this.menuRepository.findOne(ObjectId(dish.menuId))
         //console.log(afterdeletemenu)
         return {
@@ -346,5 +328,4 @@ export class RestaurantService {
       }
     }
   }
-
 }

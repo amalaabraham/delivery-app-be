@@ -8,10 +8,17 @@ const ObjectId = require('mongodb').ObjectID;
 @EntityRepository(Restaurant)
 export class RestaurantRepository extends MongoRepository<Restaurant> {
   async createRestaurant(restaurantregisterDto: any, id): Promise<any> {
-    const { name, address, contact, photos, location } = restaurantregisterDto;
+    const {
+      name,
+      address,
+      contact,
+      photos,
+      location,
+      timings,
+    } = restaurantregisterDto;
     const restaurant = new Restaurant();
     restaurant.name = name;
-    restaurant.address = address;
+    (restaurant.timings = timings), (restaurant.address = address);
     restaurant.contact = contact;
     restaurant.ownerID = id;
     restaurant.photos = photos;

@@ -19,6 +19,10 @@ export class UpdateRestaurantDto {
   photos: any;
 
   @ApiProperty({ example: null })
+  @IsOptional()
+  timings: any;
+
+  @ApiProperty({ example: null })
   @IsNumber()
   location: number;
 

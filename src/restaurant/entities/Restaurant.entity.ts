@@ -24,6 +24,9 @@ export class Restaurant {
   @Column({ nullable: true })
   contact: number;
 
+  @Column({ nullable: true })
+  timings: any;
+
   @Column({ type: 'jsonb', nullable: true })
   photos: any;
 
@@ -51,10 +54,10 @@ export class Restaurant {
   @Column({ default: 0 })
   rating: number;
 
-  @Column({default:0})
+  @Column({ default: 0 })
   approved: number;
 
-  @Column({type:'jsonb',nullable:true})
+  @Column({ type: 'jsonb', nullable: true })
   banner: any;
 
   constructor(restaurant?: Partial<Restaurant>) {

@@ -341,4 +341,23 @@ export class RestaurantService {
     }
   }
 
+  async getRestaurantReview(user: User, id): Promise<any> {
+    
+    try {
+      
+      var restaurant = await this.restaurantRepository.findOne(ObjectId(id));
+      const length = restaurant.review.length;
+      for (var i=0;i<length;i++)
+      {
+      const user = await this.userRepository.findOne(ObjectId(restaurant.review[i].userId));
+     restaurant.review[i]['username'] = user.name;
+      
+      }
+      
+      return restaurant.review;
+      
+      
+    } catch (e) {}
+  }
+
 }

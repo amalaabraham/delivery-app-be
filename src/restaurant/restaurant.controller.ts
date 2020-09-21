@@ -133,6 +133,12 @@ export class RestaurantController {
     console.log(req.user)
     return this.restaurantService.addReview(review, req.user,resid);
   }
-
+ 
+  @Get('getrestaurantreview/:resId')
+  getRestaurantReview(@Req() req: any, @Param('resId') _id: string) {
+    this.logger.verbose('restaurant review retrieved');
+    
+    return this.restaurantService.getRestaurantReview(req.user, _id);
+  }
 }
 

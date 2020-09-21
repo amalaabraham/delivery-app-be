@@ -60,6 +60,9 @@ export class Restaurant {
   @Column({ type: 'jsonb', nullable: true })
   banner: any;
 
+  @Column()
+  review: any;
+
   constructor(restaurant?: Partial<Restaurant>) {
     Object.assign(this, restaurant);
   }

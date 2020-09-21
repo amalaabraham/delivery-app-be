@@ -16,6 +16,8 @@ import { RestaurantFilterDto } from './dto/restaurantfilterdto.dto';
 import { MenuRepository } from 'src/menu/menu.repository';
 import { UpdateApprovalStatus } from './dto/updateApprovalStatus.dto';
 import { AddBanner } from './dto/AddBannerDto.dto';
+import { AddReview } from './dto/addreviewsdto.dto';
+import { AddReviews } from './dto/AddReviewDto.dto';
 const ObjectId = require('mongodb').ObjectID;
 
 @Injectable()
@@ -328,4 +330,15 @@ export class RestaurantService {
       }
     }
   }
+
+  async addReview( review: AddReview, user: User,resid): Promise<any> {
+    try {
+      console.log(user);
+       
+        return this.restaurantRepository.addReview( review,user,resid);
+    } catch (e) {
+      throw new HttpException({ message: e }, HttpStatus.BAD_REQUEST);
+    }
+  }
+
 }

@@ -1,20 +1,5 @@
 import {
-  Controller,
-  Logger,
-  Get,
-  UseGuards,
-  Req,
-  Param,
-  ParseIntPipe,
-  Post,
-  UseInterceptors,
-  Body,
-  UploadedFile,
-  Delete,
-  Patch,
-  Query,
-  ValidationPipe,
-  Put,
+  Controller,Logger,Get,UseGuards,Req,Param,ParseIntPipe,Post,UseInterceptors,Body,UploadedFile,Delete,Patch,Query,ValidationPipe, Put,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { RestaurantService } from './restaurant.service';
@@ -26,6 +11,8 @@ import { Prop } from '@nestjs/mongoose';
 import { RestaurantFilterDto } from './dto/restaurantfilterdto.dto';
 import { UpdateApprovalStatus } from './dto/updateApprovalStatus.dto';
 import { AddBanner } from './dto/AddBannerDto.dto';
+import { AddReview } from './dto/addreviewsdto.dto';
+import { AddReviews } from './dto/AddReviewDto.dto';
 
 @ApiTags('Restaurant Management')
 @Controller('api/v1/restaurant')
@@ -45,7 +32,6 @@ export class RestaurantController {
     return this.restaurantService.getRestaurantNum();
   }
 
- 
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
@@ -134,11 +120,19 @@ export class RestaurantController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Post('deletebanner/:bannerId/:resId')
-  deleteDish(@Req() req: any, @Param('resId') id: string,@Param('bannerId') bannerid: string ) {
+  deleteBanner(@Req() req: any, @Param('resId') id: string,@Param('bannerId') bannerid: string ) {
     this.logger.verbose('banner removed');
     return this.restaurantService.deleteBanner(req.user, id,bannerid);
   }
 
-
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('addreview/:resId')
+  addReview(@Req() req: any, @Body() review: AddReview, @Param('resId') resid: string) {
+    this.logger.verbose('adding review');
+    console.log(req.user)
+    return this.restaurantService.addReview(review, req.user,resid);
+  }
 
 }
+

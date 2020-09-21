@@ -3,6 +3,8 @@ import { Restaurant } from './entities/Restaurant.entity';
 import { ObjectID } from 'mongodb';
 import { AddBanner } from './dto/AddBannerDto.dto';
 import { User } from 'src/auth/entities/User.entity';
+import { AddReview } from './dto/addreviewsdto.dto';
+import { AddReviews } from './dto/AddReviewDto.dto';
 const ObjectId = require('mongodb').ObjectID;
 
 @EntityRepository(Restaurant)
@@ -29,6 +31,7 @@ export class RestaurantRepository extends MongoRepository<Restaurant> {
     restaurant.rating = 0;
     restaurant.approved = 0;
     restaurant.banner = 'NULL';
+    restaurant.review = [];
     await this.save(restaurant);
     console.log(restaurant);
 
@@ -71,6 +74,24 @@ export class RestaurantRepository extends MongoRepository<Restaurant> {
       banner[i]['bannerId'] = new ObjectID();
       restaurant.banner.push(banner[i]);
     }
+
+    await this.save(restaurant);
+    console.log(restaurant);
+    return restaurant;
+  }
+  async addReview(
+    reviews: AddReview, user: User,resid
+  ): Promise<any> {
+    
+    const restaurant = await this.findOne(ObjectId(resid));
+    console.log(restaurant)
+    const {review} = reviews;
+    for (var i = 0; i < review.length; i++) {
+      review[i]['reviewId'] = new ObjectID();
+      review[i]['userId'] = user.id;
+      restaurant.review.push(review[i]);
+    }
+    console.log(review)
 
     await this.save(restaurant);
     console.log(restaurant);

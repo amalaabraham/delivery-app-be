@@ -80,18 +80,21 @@ export class RestaurantRepository extends MongoRepository<Restaurant> {
     return restaurant;
   }
   async addReview(
-    reviews: AddReview, user: User,resid
+    reviews: AddReviews, user: User,resid
   ): Promise<any> {
     
     const restaurant = await this.findOne(ObjectId(resid));
     console.log(restaurant)
-    const {review} = reviews;
-    for (var i = 0; i < review.length; i++) {
-      review[i]['reviewId'] = new ObjectID();
-      review[i]['userId'] = user.id;
-      restaurant.review.push(review[i]);
-    }
-    console.log(review)
+      reviews['reviewId'] = new ObjectID();
+      reviews['userId'] = user.id;
+      if (restaurant.review){
+        restaurant.review.push(reviews);
+      }
+      else {
+        restaurant.review=[reviews];
+      }
+   
+    console.log(reviews)
 
     await this.save(restaurant);
     console.log(restaurant);

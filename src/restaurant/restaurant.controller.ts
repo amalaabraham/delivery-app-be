@@ -128,7 +128,7 @@ export class RestaurantController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Post('addreview/:resId')
-  addReview(@Req() req: any, @Body() review: AddReview, @Param('resId') resid: string) {
+  addReview(@Req() req: any, @Body() review: AddReviews, @Param('resId') resid: string) {
     this.logger.verbose('adding review');
     console.log(req.user)
     return this.restaurantService.addReview(review, req.user,resid);

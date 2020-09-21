@@ -331,7 +331,7 @@ export class RestaurantService {
     }
   }
 
-  async addReview( review: AddReview, user: User,resid): Promise<any> {
+  async addReview( review: AddReviews, user: User,resid): Promise<any> {
     try {
       console.log(user);
        

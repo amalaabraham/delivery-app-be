@@ -200,14 +200,16 @@ export class RestaurantService {
 
     console.log(resname);
     if (resname) {
-      restaurantname = await this.restaurantRepository.find({ name: resname });
+      resname.toLowerCase();
+      restaurantname = await this.restaurantRepository.find({ name: resname.toLowerCase() });
       restaurant = _.intersectionWith(restaurant, restaurantname, _.isEqual);
 
       //restauranttest = restaurant.map((item, i) => Object.assign({}, item, restaurantname[i]));
     }
     if (location) {
+      location.toLowerCase()
       restaurantlocation = await this.restaurantRepository.find({
-        location: location,
+        location: location.toLowerCase(),
       });
       restaurant = _.intersectionWith(
         restaurant,
@@ -216,11 +218,12 @@ export class RestaurantService {
       );
     }
     if (dish) {
+      dish.toLowerCase();
       menudish = await this.menuRepository.find();
       //console.log(menudish)
       for (var i = 0; i < menudish.length; i++) {
         for (var j = 0; j < menudish[i].dishes.length; j++) {
-          if (menudish[i].dishes[j].name === dish) {
+          if (menudish[i].dishes[j].name=== dish.toLowerCase()) {
             restaurantdish = await this.restaurantRepository.findOne(
               ObjectId(menudish[i].restaurantId),
             );

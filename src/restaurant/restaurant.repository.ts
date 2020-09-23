@@ -19,13 +19,13 @@ export class RestaurantRepository extends MongoRepository<Restaurant> {
       timings,
     } = restaurantregisterDto;
     const restaurant = new Restaurant();
-    restaurant.name = name;
+    restaurant.name = name.toLowerCase();
     (restaurant.timings = timings), (restaurant.address = address);
     restaurant.contact = contact;
     restaurant.ownerID = id;
     restaurant.photos = photos;
     restaurant.status = 'ACTIVE';
-    restaurant.location = location;
+    restaurant.location = location.toLowerCase();
     restaurant.noofdishes = 0;
     restaurant.totaldishprice = 0;
     restaurant.rating = 0;

@@ -7,6 +7,7 @@ export class AddDishes {
   @IsString()
   name: string;
 
+
   @ApiProperty({ example: null })
   @IsNumber()
   price: number;

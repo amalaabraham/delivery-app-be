@@ -146,13 +146,13 @@ export class RestaurantService {
       const restaurant = await this.restaurantRepository.findOne(ObjectId(id));
       if (restaurant) {
         if (data.name) {
-          restaurant.name = data.name;
+          restaurant.name = data.name.toLowerCase();
         }
         if (data.address) {
           restaurant.address = data.address;
         }
         if (data.location) {
-          restaurant.location = data.location;
+          restaurant.location = data.location.toLowerCase();
         }
         if (data.contact) {
           restaurant.contact = data.contact;
